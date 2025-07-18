@@ -1,0 +1,27 @@
+# Custom
+actions-yml
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Editor settings
+.vscode/
+.idea/
+
+# Build outputs
+app-ui/dist/
+app-backend/dist/
+
+# Docker
+*.local
+.dockerignore
+docker-compose.override.yml

@@ -1,0 +1,30 @@
+version: '3.9'  # Docker Compose file format version
+
+networks:
+  time-tracking-dashboard-network:
+
+services:
+  app-ui:
+    build:
+      context: ./app-ui
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./app-ui:/app
+    depends_on:
+      - backend
+    networks:
+     - time-tracking-dashboard-network
+
+  app-backend:
+    build:
+      context: ./app-backend
+      dockerfile: Dockerfile.backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+    networks:
+     - time-tracking-dashboard-network
+
