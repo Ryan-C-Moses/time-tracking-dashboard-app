@@ -14,7 +14,7 @@ const PORT = 3000;
 const saltRounds = 10;
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrkey: process.env.JWT_SECRET,
+  secretOrKey: process.env.JWT_SECRET,
 };
 
 const db = await connectDB();
@@ -27,6 +27,54 @@ app.use(
   })
 );
 app.use(passport.initialize());
+
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, cb) => {
+    try {
+      const result = await db.query("SELECT * FROM users WHERE id = $1", [
+        jwt_payload.id,
+      ]);
+      const user = result.rows[0];
+
+      if (!user) return cb(null, false, { message: "User not found" });
+      return cb(null, user);
+    } catch (err) {
+      console.error("Auth error:", err);
+      return cb(err);
+    }
+  })
+);
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "loginPassword" },
+    async (email, password, cb) => {
+      try {
+        const result = await db.query("SELECT * FROM users WHERE email = $1", [
+          email,
+        ]);
+
+        if (result.rows.length === 0) {
+          return cb(null, false, { message: "User not found" });
+        }
+
+        const user = result.rows[0];
+        const storedHashedPassword = user.password_hash;
+
+        const isMatch = await bcrypt.compare(password, storedHashedPassword);
+
+        if (!isMatch) {
+          return cb(null, false, { message: "Incorrect password" });
+        }
+
+        return cb(null, user);
+      } catch (err) {
+        console.error(err);
+        return cb(err);
+      }
+    }
+  )
+);
 
 app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
   res.json("Hello from the backend of the Time Tracking Dashboard App");
@@ -46,6 +94,7 @@ app.get(
   (req, res) => {
     res.send({
       message: "Logout of application",
+      user: req.user,
     });
   }
 );
@@ -90,7 +139,7 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     if (existingUser.rows.length > 0) {
-      res.send("Email already exists. Try logging in");
+      return res.send("Email already exists. Try logging in");
     }
     // hash the password
     const hash = await bcrypt.hash(password, saltRounds);
@@ -164,54 +213,6 @@ app.delete(
       message: "Deleting a task",
     });
   }
-);
-
-passport.use(
-  new JwtStrategy(opts, async (jwt_payload, cb) => {
-    try {
-      const result = await db.query("SELECT * FROM users WHERE id = $1", [
-        jwt_payload.id,
-      ]);
-      const user = result.rows[0];
-
-      if (!user) return cb(null, false, { message: "User not found" });
-      return cb(null, user);
-    } catch (err) {
-      console.error("Auth error:", err);
-      return cb(err);
-    }
-  })
-);
-
-passport.use(
-  new LocalStrategy(
-    { usernameField: "email", passwordField: "loginPassword" },
-    async (email, password, cb) => {
-      try {
-        const result = await db.query("SELECT * FROM users WHERE email = $1", [
-          email,
-        ]);
-
-        if (result.rows.length === 0) {
-          return cb(null, false, { message: "User not found" });
-        }
-
-        const user = result.rows[0];
-        const storedHashedPassword = user.password_hash;
-
-        const isMatch = await bcrypt.compare(password, storedHashedPassword);
-
-        if (!isMatch) {
-          return cb(null, false, { message: "Incorrect password" });
-        }
-
-        return cb(null, user);
-      } catch (err) {
-        console.error(err);
-        return cb(err);
-      }
-    }
-  )
 );
 
 app.listen(PORT, () =>
