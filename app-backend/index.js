@@ -49,6 +49,7 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "loginPassword" },
     async (email, password, cb) => {
+      console.log("Local Strategy Called:", email, password);
       try {
         const result = await db.query("SELECT * FROM users WHERE email = $1", [
           email,
@@ -76,36 +77,33 @@ passport.use(
   )
 );
 
-app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
-  res.json("Hello from the backend of the Time Tracking Dashboard App");
-});
-
-app.get(
-  "/api",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({ message: "Hello from backend!" });
-  }
-);
-
-app.get(
-  "/api/auth/logout",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send({
-      message: "Logout of application",
-      user: req.user,
-    });
-  }
-);
-
 app.get(
   "/api/tasks",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send({
-      message: "Get all task",
-    });
+  async (req, res) => {
+    console.log(req.user);
+    try {
+      console.log("GET Method");
+      const result = await db.query(
+        `SELECT
+          tasks.id AS task_id,
+          tasks.title AS title,
+          tasks.category AS category,
+          task_entries.id AS entry_id,
+          task_entries.time_spent_minutes AS duration,
+          task_entries.created_at
+        FROM
+          tasks
+        LEFT JOIN task_entries ON tasks.id = task_entries.task_id
+        WHERE tasks.user_id = $1
+        ORDER BY tasks.id, task_entries.created_at DESC`,
+        [req.user.id]
+      );
+      res.status(200).json(result.rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
   }
 );
 
@@ -122,10 +120,30 @@ app.put(
 app.post(
   "/api/tasks",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send({
-      message: "Create a task",
-    });
+  async (req, res) => {
+    const { category, title, duration } = req.body;
+    try {
+      await db.query("BEGIN");
+      const result = await db.query(
+        "INSERT INTO tasks (user_id, title, category) VALUES ($1, $2, $3) RETURNING id",
+        [req.user.id, title, category]
+      );
+
+      const { taskId } = result.rows[0];
+
+      await db.query(
+        "INSERT INTO task_entries (task_id, time_spent_minutes) VALUES ($1, $2)",
+        [taskId, duration]
+      );
+
+      await db.query("COMMIT");
+
+      res.status(200).send({ message: "Task added successfully!" });
+    } catch (err) {
+      await db.query("ROLLBACK");
+      console.error("Transaction failed:", err);
+      res.status(500).send("Internal Server Error");
+    }
   }
 );
 
