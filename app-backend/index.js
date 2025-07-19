@@ -27,7 +27,31 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello from backend!" });
 });
 
-app.post("/register", async (req, res) => {
+app.get("/api/auth/logout", (req, res) => {
+  res.send({
+    message: "Logout of application",
+  });
+});
+
+app.get("/api/tasks", (req, res) => {
+  res.send({
+    message: "Get all task",
+  });
+});
+
+app.put("/api/tasks/:id", (req, res) => {
+  res.send({
+    message: "Update a task",
+  });
+});
+
+app.post("/api/tasks", (req, res) => {
+  res.send({
+    message: "Create a task",
+  });
+});
+
+app.post("/api/auth/register", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
   try {
@@ -47,7 +71,7 @@ app.post("/register", async (req, res) => {
       [email, hash, firstName, lastName]
     );
 
-    console.log(result.rows)
+    console.log(result.rows);
     const [user] = result.rows;
     const username = `${user.first_name} ${user.last_name}`;
 
@@ -66,7 +90,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
   const { email, loginPassword } = req.body;
 
   try {
@@ -104,6 +128,12 @@ app.post("/login", async (req, res) => {
     console.error(err);
     res.status(500).send("Internal Server Error");
   }
+});
+
+app.delete("/api/tasks/:id", (req, res) => {
+  res.send({
+    message: "Deleting a task",
+  });
 });
 
 app.listen(PORT, () =>
