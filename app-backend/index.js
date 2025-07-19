@@ -1,13 +1,21 @@
 import express from "express";
 import bodyParser from "body-parser";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import connectDB from "./config/db.js";
 import "dotenv/config";
 
 const app = express();
 const PORT = 3000;
 const saltRounds = 10;
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrkey: process.env.JWT_SECRET,
+};
 
 const db = await connectDB();
 
@@ -18,38 +26,59 @@ app.use(
     origin: process.env.CLIENT_URL,
   })
 );
+app.use(passport.initialize());
 
-app.get("/", (req, res) => {
+app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
   res.json("Hello from the backend of the Time Tracking Dashboard App");
 });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from backend!" });
-});
+app.get(
+  "/api",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({ message: "Hello from backend!" });
+  }
+);
 
-app.get("/api/auth/logout", (req, res) => {
-  res.send({
-    message: "Logout of application",
-  });
-});
+app.get(
+  "/api/auth/logout",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send({
+      message: "Logout of application",
+    });
+  }
+);
 
-app.get("/api/tasks", (req, res) => {
-  res.send({
-    message: "Get all task",
-  });
-});
+app.get(
+  "/api/tasks",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send({
+      message: "Get all task",
+    });
+  }
+);
 
-app.put("/api/tasks/:id", (req, res) => {
-  res.send({
-    message: "Update a task",
-  });
-});
+app.put(
+  "/api/tasks/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send({
+      message: "Update a task",
+    });
+  }
+);
 
-app.post("/api/tasks", (req, res) => {
-  res.send({
-    message: "Create a task",
-  });
-});
+app.post(
+  "/api/tasks",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send({
+      message: "Create a task",
+    });
+  }
+);
 
 app.post("/api/auth/register", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -71,9 +100,14 @@ app.post("/api/auth/register", async (req, res) => {
       [email, hash, firstName, lastName]
     );
 
-    console.log(result.rows);
     const [user] = result.rows;
     const username = `${user.first_name} ${user.last_name}`;
+
+    const payload = { id: user.id, email: user.email };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "1h",
+    });
 
     res.status(201).json({
       message: "User registered successfully",
@@ -82,7 +116,7 @@ app.post("/api/auth/register", async (req, res) => {
         email: user.email,
         username,
       },
-      // token: generateJwtToken(newUser),
+      token,
     });
   } catch (err) {
     console.error("Registration Error:", err);
@@ -90,51 +124,95 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-app.post("/api/auth/login", async (req, res) => {
-  const { email, loginPassword } = req.body;
-
-  try {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).send("User not found");
+app.post("/api/auth/login", async (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err) {
+      console.error("Auth error:", err);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
 
-    const user = result.rows[0];
-    const storedHashedPassword = user.password_hash;
-
-    const isMatch = await bcrypt.compare(loginPassword, storedHashedPassword);
-
-    if (!isMatch) {
-      return res.status(401).send("Incorrect password");
+    if (!user) {
+      return res.status(401).json({ message: info?.message || "Login failed" });
     }
 
-    if (result) {
-      const username = `${user.first_name} ${user.last_name}`;
+    const username = `${user.first_name} ${user.last_name}`;
 
-      res.status(200).json({
-        message: "OK",
-        user: {
-          id: user.id,
-          email: user.email,
-          username,
-        },
-        // token: generateJwtToken(newUser),
-      });
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    const payload = { id: user.id, email: user.email };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({
+      message: "OK",
+      user: {
+        id: user.id,
+        email: user.email,
+        username,
+      },
+      token,
+    });
+  })(req, res, next);
+});
+
+app.delete(
+  "/api/tasks/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.send({
+      message: "Deleting a task",
+    });
   }
-});
+);
 
-app.delete("/api/tasks/:id", (req, res) => {
-  res.send({
-    message: "Deleting a task",
-  });
-});
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, cb) => {
+    try {
+      const result = await db.query("SELECT * FROM users WHERE id = $1", [
+        jwt_payload.id,
+      ]);
+      const user = result.rows[0];
+
+      if (!user) return cb(null, false, { message: "User not found" });
+      return cb(null, user);
+    } catch (err) {
+      console.error("Auth error:", err);
+      return cb(err);
+    }
+  })
+);
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "loginPassword" },
+    async (email, password, cb) => {
+      try {
+        const result = await db.query("SELECT * FROM users WHERE email = $1", [
+          email,
+        ]);
+
+        if (result.rows.length === 0) {
+          return cb(null, false, { message: "User not found" });
+        }
+
+        const user = result.rows[0];
+        const storedHashedPassword = user.password_hash;
+
+        const isMatch = await bcrypt.compare(password, storedHashedPassword);
+
+        if (!isMatch) {
+          return cb(null, false, { message: "Incorrect password" });
+        }
+
+        return cb(null, user);
+      } catch (err) {
+        console.error(err);
+        return cb(err);
+      }
+    }
+  )
+);
 
 app.listen(PORT, () =>
   console.log(`Backend running on http://localhost:${PORT}`)
