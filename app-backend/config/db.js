@@ -1,4 +1,4 @@
-import pg from pg;
+import pg from "pg";
 import "dotenv/config"
 
 const connectDB = async () => {
@@ -11,9 +11,11 @@ const connectDB = async () => {
             port: process.env.DB_PORT
         });
 
-        db.connect();
+        await db.connect();
+
+        return db;
     } catch (err) {
-       console.log(err);
+       console.error(err);
        throw new Error('Cannot connect with database\n' + error.stack);
     }
 };
