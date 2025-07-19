@@ -8,10 +8,13 @@ services:
     build:
       context: ./app-ui
       dockerfile: Dockerfile.frontend
+    env_file:
+      - path: ./app-ui/.env.local
     ports:
       - "5173:5173"
-    # volumes:
-    #   - ./app-ui:/app
+    volumes:
+      - ./app-ui:/app
+      - /app/node_modules
     depends_on:
       - ttd-backend
     networks:
