@@ -1,0 +1,50 @@
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Work', 'Daily', 7);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (1, 5);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Work', 'Weekly', 36);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (2, 32);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Work', 'Monthly', 128);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (3, 103);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Play', 'Daily', 2);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (4, 1);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Play', 'Weekly', 8);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (5, 10);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Play', 'Monthly', 29);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (6, 23);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Study', 'Daily', 1);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (7, 0);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Study', 'Weekly', 7);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (8, 4);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Study', 'Monthly', 19);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (9, 13);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Exercise', 'Daily', 1);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (10, 1);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Exercise', 'Weekly', 5);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (11, 4);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Exercise', 'Monthly', 18);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (12, 11);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Social', 'Daily', 3);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (13, 1);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Social', 'Weekly', 10);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (14, 5);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Social', 'Monthly', 23);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (15, 21);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Self Care', 'Daily', 1);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (16, 0);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Self Care', 'Weekly', 2);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (17, 2);
+INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES (13, 'Self Care', 'Monthly', 11);
+INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (18, 7);
+
+
+BEGIN;
+
+INSERT INTO tasks (user_id, title, category)
+VALUES (13, 'Work', 'Weekly')
+RETURNING id;
+
+-- Assume the returned ID is 5
+
+INSERT INTO task_entries (task_id, time_spent_minutes)
+VALUES (5, 120);
+
+COMMIT;

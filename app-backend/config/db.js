@@ -1,4 +1,5 @@
 import pg from "pg";
+import logger from "./logger.js";
 import "dotenv/config"
 
 const connectDB = async () => {
@@ -13,6 +14,7 @@ const connectDB = async () => {
 
         await db.connect();
 
+        logger.info("Database connection established")
         return db;
     } catch (err) {
        console.error(err);

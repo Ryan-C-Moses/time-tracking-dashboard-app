@@ -4,6 +4,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import cors from "cors";
+import logger from "./config/logger.js";
+import morgan from "morgan";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import connectDB from "./config/db.js";
@@ -16,14 +18,29 @@ const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
 };
+const morganFormat =
+  process.env.NODE_ENV === "production"
+    ? ':remote-addr :method :url :status :res[content-length] - :response-time ms ":user-agent"'
+    : ':method :url :status :res[content-length] - :response-time ms ":user-agent"';
 
 const db = await connectDB();
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+} else {
+  app.use(
+    morgan(morganFormat, {
+      stream: { write: (msg) => logger.info(msg.trim()) },
+    })
+  );
+}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
+    credentials: true,
   })
 );
 app.use(passport.initialize());
@@ -37,9 +54,10 @@ passport.use(
       const user = result.rows[0];
 
       if (!user) return cb(null, false, { message: "User not found" });
+      logger.info(`[auth] User ${jwt_payload.id} authenticated successfully`);
       return cb(null, user);
     } catch (err) {
-      console.error("Auth error:", err);
+      logger.error("Auth error:", err);
       return cb(err);
     }
   })
@@ -49,7 +67,6 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "loginPassword" },
     async (email, password, cb) => {
-      console.log("Local Strategy Called:", email, password);
       try {
         const result = await db.query("SELECT * FROM users WHERE email = $1", [
           email,
@@ -68,9 +85,10 @@ passport.use(
           return cb(null, false, { message: "Incorrect password" });
         }
 
+        logger.info(`[auth] User ${user.id} authenticated successfully`);
         return cb(null, user);
       } catch (err) {
-        console.error(err);
+        logger.error(err);
         return cb(err);
       }
     }
@@ -81,9 +99,7 @@ app.get(
   "/api/tasks",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    console.log(req.user);
     try {
-      console.log("GET Method");
       const result = await db.query(
         `SELECT
           tasks.id AS task_id,
@@ -99,9 +115,11 @@ app.get(
         ORDER BY tasks.id, task_entries.created_at DESC`,
         [req.user.id]
       );
+
+      logger.info(`User ${req.user.id} requested all tasks`);
       res.status(200).json(result.rows);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       res.status(500).send("Internal Server Error");
     }
   }
@@ -128,10 +146,11 @@ app.post(
 
       await db.query("COMMIT");
 
+      logger.info(`User ${req.user.id} created task "${title}"`);
       res.status(200).send({ message: "Task added successfully!" });
     } catch (err) {
       await db.query("ROLLBACK");
-      console.error("Transaction failed:", err);
+      logger.error("Transaction failed:", err);
       res.status(500).send("Internal Server Error");
     }
   }
@@ -166,6 +185,7 @@ app.post("/api/auth/register", async (req, res) => {
       expiresIn: "1h",
     });
 
+    logger.info(`User ${user.id} registered}`);
     res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -176,7 +196,7 @@ app.post("/api/auth/register", async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("Registration Error:", err);
+    logger.error("Registration Error:", err);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -184,7 +204,7 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
-      console.error("Auth error:", err);
+      logger.error("Auth error:", err);
       return res.status(500).json({ message: "Internal Server Error" });
     }
 
@@ -201,6 +221,7 @@ app.post("/api/auth/login", async (req, res, next) => {
       expiresIn: "1h",
     });
 
+    logger.info(`User ${user.id} logged in`);
     res.status(200).json({
       message: "OK",
       user: {
@@ -287,9 +308,11 @@ app.put(
       }
 
       await db.query("COMMIT");
+
+      logger.info(`User ${req.user.id} Updated task ${newTitle}`);
       res.status(200).send({ message: "Task Updated Successfully!" });
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       await db.query("ROLLBACK");
       res.status(500).send({ message: "Internal Server Error" });
     }
@@ -310,17 +333,20 @@ app.delete(
         return res.status(404).send({ message: "Task Not Found" });
       }
 
+      const task = result.rows[0];
+
+      logger.info(`User ${req.user.id} Deleted task ${task.title}`);
       res.status(200).send({
         status: "200 OK",
         message: "Task Deleted!",
       });
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       res.status(500).send("Internal Server Error");
     }
   }
 );
 
-app.listen(PORT, () =>
-  console.log(`Backend running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  logger.info(`Backend running on http://localhost:${PORT}`);
+});
