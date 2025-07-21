@@ -18,7 +18,7 @@ const connectDB = async () => {
         return db;
     } catch (err) {
        console.error(err);
-       throw new Error('Cannot connect with database\n' + error.stack);
+       throw new Error('Cannot connect with database\n' + err.stack);
     }
 };
 
