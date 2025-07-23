@@ -19,9 +19,6 @@ jobs:
   unit-tests:
     name: 🧪 Unit Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app-backend
     steps:
       - run: echo "Validating Code with Unit Tests..."
       - name: Checkout Code and Feature Branch
@@ -35,13 +32,11 @@ jobs:
         run: git merge origin/develop
       - name: Perform Unit Testing
         run: npm run tests:unit
+        working-directory: app-backend
 
   integration-tests:
     name: 🔗 Integration Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app-backend
     needs: unit-tests
     services:
       postgres:
@@ -79,11 +74,14 @@ jobs:
           node-version: "20"
       - name: Install Dependencies
         run: npm ci
+        working-directory: app-backend
       - name: Seed database with test data
         run: node scripts/seed-db.js
+        working-directory: app-backend
       - run: echo "Validate Integration Tests"
       - name: Perform Integration Testing
         run: npm run tests:integration
+        working-directory: app-backend
       - name: Upload Logs
         uses: actions/upload-artifact@v4
         with:
