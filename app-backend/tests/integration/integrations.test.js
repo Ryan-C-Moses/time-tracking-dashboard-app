@@ -1,7 +1,8 @@
 import request from "supertest";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll, vi } from "vitest";
 import app from "../../app.js"; // Adjust if needed
 import jwt from "jsonwebtoken";
+import logger from "../../config/logger.js";
 
 const testUser = {
   id: 1,
@@ -16,6 +17,10 @@ const token = jwt.sign(testUser, process.env.JWT_SECRET, {
 });
 
 describe("Auth Routes", () => {
+  beforeAll(() => {
+    logger.info("Timeout for setup");
+  }, 20000);
+
   it("should register a user", async () => {
     const res = await request(app).post("/api/auth/register").send({
       email: "new_user@fake.com",
