@@ -1,17 +1,14 @@
-// Integration Testing
-
 import request from "supertest";
 import { describe, it, expect } from "vitest";
 import app from "../../app.js"; // Adjust if needed
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const testUser = {
   id: 1,
   email: "jeremy_robson@fake.com",
 };
+
+console.log(process.env.JWT_SECRET);
 
 const token = jwt.sign(testUser, process.env.JWT_SECRET, {
   algorithm: "HS256",
