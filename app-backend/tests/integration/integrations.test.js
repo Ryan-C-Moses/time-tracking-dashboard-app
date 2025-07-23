@@ -17,10 +17,6 @@ const token = jwt.sign(testUser, process.env.JWT_SECRET, {
 });
 
 describe("Auth Routes", () => {
-  beforeAll(() => {
-    logger.info("Timeout for setup");
-  }, 20000);
-
   it("should register a user", async () => {
     const res = await request(app).post("/api/auth/register").send({
       email: "new_user@fake.com",
