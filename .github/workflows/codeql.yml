@@ -14,9 +14,7 @@ name: "CodeQL Advanced"
 on:
   pull_request:
     branches: ["main", "develop"]
-    types:
-      - opened
-
+    types: [opened, synchronize, reopened]
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
