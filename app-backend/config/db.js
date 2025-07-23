@@ -17,7 +17,7 @@ const connectDB = async () => {
         logger.info("Database connection established")
         return db;
     } catch (err) {
-       console.error(err);
+       logger.error(err);
        throw new Error('Cannot connect with database\n' + err.stack);
     }
 };

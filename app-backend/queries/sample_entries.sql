@@ -36,15 +36,3 @@ INSERT INTO tasks (user_id, title, category, previous_time_spent_minutes) VALUES
 INSERT INTO task_entries (task_id, time_spent_minutes) VALUES (18, 7);
 
 
-BEGIN;
-
-INSERT INTO tasks (user_id, title, category)
-VALUES (13, 'Work', 'Weekly')
-RETURNING id;
-
--- Assume the returned ID is 5
-
-INSERT INTO task_entries (task_id, time_spent_minutes)
-VALUES (5, 120);
-
-COMMIT;
