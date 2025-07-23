@@ -1,9 +1,10 @@
-name: Features Git Flow
+name: Features Git Flow (BackEnd)
 on:
   pull_request:
     branches: ["develop"]
-    types:
-      - opened
+    paths:
+      - "app-backend/**"
+    types: [opened, synchronize, reopened]
 permissions:
   contents: write
   pull-requests: write
@@ -13,20 +14,31 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   unit-tests:
+    name: 🧪 Unit Tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app-backend
     steps:
       - run: echo "Validating Code with Unit Tests..."
       - name: Checkout Code and Feature Branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref}}
-      - name: Merge Develop in Feature Branch
-        run: git merge develop
+          fetch-depth: 0
+      - name: Fetch develop
+        run: git fetch origin develop
+      - name: Merge develop into feature branch
+        run: git merge origin/develop
       - name: Perform Unit Testing
         run: npm run tests:unit
 
   integration-tests:
+    name: 🔗 Integration Tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app-backend
     needs: unit-tests
     services:
       postgres:
@@ -42,7 +54,7 @@ jobs:
       DB_PORT: 5432
       DB_USER: ${{secrets.TEST_DB_USER}}
       DB_PASSWORD: ${{secrets.TEST_DB_PASSWORD}}
-      DB_NAME: ${{secrets.TEST_DB_USER}}
+      DB_NAME: ${{secrets.TEST_DB}}
       DB_URL: postgres://${{secrets.TEST_DB_USER}}:${{secrets.TEST_DB_PASSWORD}}@db:5432/postgres
       JWT_SECRET: ${{secrets.TEST_JWT_SECRET}}
       PORT: 3000
@@ -53,22 +65,50 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref}}
-      - name: Merge Develop in Feature Branch
-        run: git merge develop
+          fetch-depth: 0
+      - name: Fetch develop
+        run: git fetch origin develop
+      - name: Merge develop into feature branch
+        run: git merge origin/develop
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - name: Install Dependencies
         run: npm ci
       - name: Seed database with test data
-        run: node script/
+        run: node scripts/seed-db.js
       - run: echo "Validate Integration Tests"
       - name: Perform Integration Testing
         run: npm run tests:integration
+      - name: Upload Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-artifacts
+          path: |
+            app-backend/logs/*.log
 
   create-pr:
+    name: 🚀 Create PR to Develop
     needs: [unit-tests, integration-tests]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Creating Pull Request for Develop Branch"
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.head_ref}}
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "$USERNAME"
+          git config user.email "$EMAIL"
+      - name: Creating Pull Request for Develop Branch
+        run: |
+          # Check if a PR already exists to avoid duplicates
+          gh pr list --head ${{github.head_ref}} --base develop --state open --json number | grep -q 'number' \
+          && echo "🔁 PR already exists." \
+          || gh pr create \
+              --title "Automated PR: ${{github.head_ref}} → Development" \
+              --body "This pull request was created automatically by GitHub Actions." \
+              --base develop \
+              --head ${{github.head_ref}}
