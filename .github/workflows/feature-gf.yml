@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+defaults:
+    run:
+      shell: bash
 env:
   USERNAME: ${{ secrets.BOT_USERNAME }}
   EMAIL: ${{ secrets.BOT_EMAIL }}
