@@ -1,6 +1,6 @@
-import connectDB from "../config/db";
+import connectDB from "../config/db.js";
 import fs from "fs";
-import logger from "../config/logger";
+import logger from "../config/logger.js";
 
 const createFakeTestData = async () => {
   try {
