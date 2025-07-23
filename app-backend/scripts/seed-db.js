@@ -3,6 +3,7 @@ import fs from "fs";
 import logger from "../config/logger.js";
 
 const createFakeTestData = async () => {
+  let db = null;
   try {
     logger.info("Reading SQL Files...");
 
@@ -22,7 +23,7 @@ const createFakeTestData = async () => {
     logger.info("Completed Reading SQL Files");
 
     logger.verbose("Test DB Started !");
-    const db = await connectDB();
+    db = await connectDB();
 
     logger.info("Create Tables...");
     await db.query(createTableSQL);
