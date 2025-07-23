@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import rateLimit from "express-rate-limit";
 import cors from "cors";
 import logger from "./config/logger.js";
 import morgan from "morgan";
@@ -21,6 +22,12 @@ const morganFormat =
   process.env.NODE_ENV === "production"
     ? ':remote-addr :method :url :status :res[content-length] - :response-time ms ":user-agent"'
     : ':method :url :status :res[content-length] - :response-time ms ":user-agent"';
+
+const taskRateLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10, // limit each user to 10 request per minute
+  message: "Too many requests, please try again later.",
+});
 
 const initApp = async () => {
   const db = await connectDB();
@@ -98,6 +105,7 @@ const initApp = async () => {
 
   app.get(
     "/api/tasks",
+    rateLimit,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       try {
@@ -128,6 +136,7 @@ const initApp = async () => {
 
   app.post(
     "/api/tasks",
+    rateLimit,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const { category, title, duration } = req.body;
@@ -157,7 +166,7 @@ const initApp = async () => {
     }
   );
 
-  app.post("/api/auth/register", async (req, res) => {
+  app.post("/api/auth/register", rateLimit, async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
 
     try {
@@ -202,7 +211,7 @@ const initApp = async () => {
     }
   });
 
-  app.post("/api/auth/login", async (req, res, next) => {
+  app.post("/api/auth/login", rateLimit, async (req, res, next) => {
     passport.authenticate("local", { session: false }, (err, user, info) => {
       if (err) {
         logger.error("Auth error:", err);
@@ -239,6 +248,7 @@ const initApp = async () => {
 
   app.put(
     "/api/tasks/:taskId/entries/:entryId",
+    rateLimit,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const { taskId, entryId } = req.params;
@@ -324,6 +334,7 @@ const initApp = async () => {
 
   app.delete(
     "/api/tasks/:id",
+    rateLimit,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       try {
