@@ -7,7 +7,7 @@ services:
   ttd-frontend:
     build:
       context: ./app-ui
-      dockerfile: Dockerfile.frontend
+      dockerfile: DockerFile.frontend
     env_file:
       - path: ./app-ui/.env.local
     ports:
@@ -23,7 +23,7 @@ services:
   ttd-backend:
     build:
       context: ./app-backend
-      dockerfile: Dockerfile.backend
+      dockerfile: DockerFile.backend
     env_file:
       - path: ./app-backend/.env.local
     ports:
