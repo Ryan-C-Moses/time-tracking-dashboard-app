@@ -30,6 +30,8 @@ jobs:
         run: git fetch origin develop
       - name: Merge develop into feature branch
         run: git merge origin/develop
+      - name: Install Dependencies
+        run: npm ci
       - name: Perform Unit Testing
         run: npm run tests:unit
         working-directory: app-backend
