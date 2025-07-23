@@ -10,8 +10,8 @@ permissions:
   contents: write
   pull-requests: write
 defaults:
-    run:
-      shell: bash
+  run:
+    shell: bash
 env:
   USERNAME: ${{ secrets.BOT_USERNAME }}
   EMAIL: ${{ secrets.BOT_EMAIL }}
@@ -33,6 +33,7 @@ jobs:
         run: git merge origin/develop
       - name: Install Dependencies
         run: npm ci
+        working-directory: app-backend
       - name: Perform Unit Testing
         run: npm run test:unit
         working-directory: app-backend
