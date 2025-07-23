@@ -105,7 +105,7 @@ const initApp = async () => {
 
   app.get(
     "/api/tasks",
-    rateLimit,
+    taskRateLimiter,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       try {
@@ -136,7 +136,7 @@ const initApp = async () => {
 
   app.post(
     "/api/tasks",
-    rateLimit,
+    taskRateLimiter,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const { category, title, duration } = req.body;
@@ -166,7 +166,7 @@ const initApp = async () => {
     }
   );
 
-  app.post("/api/auth/register", rateLimit, async (req, res) => {
+  app.post("/api/auth/register", taskRateLimiter, async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
 
     try {
@@ -211,7 +211,7 @@ const initApp = async () => {
     }
   });
 
-  app.post("/api/auth/login", rateLimit, async (req, res, next) => {
+  app.post("/api/auth/login", taskRateLimiter, async (req, res, next) => {
     passport.authenticate("local", { session: false }, (err, user, info) => {
       if (err) {
         logger.error("Auth error:", err);
@@ -248,7 +248,7 @@ const initApp = async () => {
 
   app.put(
     "/api/tasks/:taskId/entries/:entryId",
-    rateLimit,
+    taskRateLimiter,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       const { taskId, entryId } = req.params;
@@ -334,7 +334,7 @@ const initApp = async () => {
 
   app.delete(
     "/api/tasks/:id",
-    rateLimit,
+    taskRateLimiter,
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
       try {
