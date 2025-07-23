@@ -24,10 +24,10 @@ beforeAll(async () => {
 describe("Auth Routes", () => {
   it("should register a user", async () => {
     const res = await request(app).post("/api/auth/register").send({
-      email: "new_user@fake.com",
-      password: "password123",
-      firstName: "New",
-      lastName: "User",
+      email: "jeremy_robson@fake.com",
+      password: "jeremy_pswd",
+      firstName: "Jeremy",
+      lastName: "Robson",
     });
 
     expect(res.statusCode).toBe(201);
