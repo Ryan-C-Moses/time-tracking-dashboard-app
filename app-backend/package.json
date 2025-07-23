@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "vitest"
+    "test:unit": "vitest tests/unit",
+    "test:integration": "vitest tests/integration"
   },
   "author": "",
   "license": "ISC",

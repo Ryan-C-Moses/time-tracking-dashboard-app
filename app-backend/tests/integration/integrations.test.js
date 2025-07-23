@@ -2,7 +2,7 @@
 
 import request from "supertest";
 import { describe, it, expect } from "vitest";
-import app from "../index.js"; // Adjust if needed
+import app from "../../index.js"; // Adjust if needed
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
