@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: ["develop"]
     types:
-      - closed
+      - opened
 permissions:
   contents: write
   pull-requests: write
@@ -12,11 +12,63 @@ env:
   EMAIL: ${{ secrets.BOT_EMAIL }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - run: echo "Validating Code with Unit Tests..."
+      - name: Checkout Code and Feature Branch
         uses: actions/checkout@v4
         with:
-          ref: release
-          fetch-depth: 0
+          ref: ${{ github.head_ref}}
+      - name: Merge Develop in Feature Branch
+        run: git merge develop
+      - name: Perform Unit Testing
+        run: npm run tests:unit
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{secrets.TEST_DB_USER}}
+          POSTGRES_PASSWORD: ${{secrets.TEST_DB_PASSWORD}}
+          POSTGRES_DB: ${{secrets.TEST_DB}}
+        ports:
+          - 5432:5432
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: ${{secrets.TEST_DB_USER}}
+      DB_PASSWORD: ${{secrets.TEST_DB_PASSWORD}}
+      DB_NAME: ${{secrets.TEST_DB_USER}}
+      DB_URL: postgres://${{secrets.TEST_DB_USER}}:${{secrets.TEST_DB_PASSWORD}}@db:5432/postgres
+      JWT_SECRET: ${{secrets.TEST_JWT_SECRET}}
+      PORT: 3000
+      NODE_ENV: Testing
+    steps:
+      - run: echo "Postgres container is running"
+      - name: Checkout Code and Feature Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref}}
+      - name: Merge Develop in Feature Branch
+        run: git merge develop
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Seed database with test data
+        run: node script/
+      - run: echo "Validate Integration Tests"
+      - name: Perform Integration Testing
+        run: npm run tests:integration
+
+  create-pr:
+    needs: [unit-tests, integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Creating Pull Request for Develop Branch"
