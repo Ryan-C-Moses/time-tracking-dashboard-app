@@ -1,19 +1,24 @@
 import request from "supertest";
-import { describe, it, expect, beforeAll, vi } from "vitest";
-import app from "../../app.js"; // Adjust if needed
+import { describe, it, expect, beforeAll, vi, afterAll } from "vitest";
 import jwt from "jsonwebtoken";
 import logger from "../../config/logger.js";
+import initApp from "../../app.js";
 
 const testUser = {
   id: 1,
   email: "jeremy_robson@fake.com",
 };
 
-console.log(process.env.JWT_SECRET);
-
 const token = jwt.sign(testUser, process.env.JWT_SECRET, {
   algorithm: "HS256",
   expiresIn: "1h",
+});
+
+let app;
+
+beforeAll(async () => {
+  logger.info("Initializing App");
+  app = await initApp();
 });
 
 describe("Auth Routes", () => {

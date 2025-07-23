@@ -12,7 +12,6 @@ import connectDB from "./config/db.js";
 import "dotenv/config";
 
 const app = express();
-const PORT = 3000;
 const saltRounds = 10;
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
