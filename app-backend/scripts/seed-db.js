@@ -1,8 +1,9 @@
 import connectDB from "../config/db.js";
 import fs from "fs";
+import path from "path";
 import logger from "../config/logger.js";
 
-const createFakeTestData = async () => {
+const createTestData = async () => {
   let db = null;
   try {
     logger.info("Reading SQL Files...");
@@ -27,13 +28,14 @@ const createFakeTestData = async () => {
 };
 
 const readSQLFiles = () => {
+
   const createTableSQL = fs.readFileSync(
-    "../queries/create_tables.sql",
+    "./queries/create_tables.sql",
     "utf8"
   );
-  const insertUsersSQL = fs.readFileSync("../queries/insert_users.sql", "utf8");
+  const insertUsersSQL = fs.readFileSync("./queries/insert_users.sql", "utf8");
   const insertTaskAndEntries = fs.readFileSync(
-    "../queries/seed_task_and_entries.sql",
+    "./queries/seed_task_and_entries.sql",
     "utf8"
   );
 
@@ -55,4 +57,4 @@ const handleDBQueries = async (db, [sql1, sql2, sql3]) => {
   await db.query("COMMIT");
 };
 
-await createFakeTestData();
+await createTestData();
