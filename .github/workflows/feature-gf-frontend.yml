@@ -1,0 +1,58 @@
+name: Features Git Flow (FrontEnd)
+# Version "1" of this action
+on:
+  pull_request:
+    branches: ["develop"]
+    paths:
+      - "app-ui/**"
+    types: [opened, synchronize, reopened]
+defaults:
+  run:
+    shell: bash
+env:
+  USERNAME: ${{ secrets.BOT_USERNAME }}
+  EMAIL: ${{ secrets.BOT_EMAIL }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  unit-tests:
+    name: 🧪 Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+        - run: echo "Validating FrontEnd code with Unit Tests..."
+        - name: Checkout Code and Feature Branch
+          uses: actions/checkout@v4
+          with:
+            ref: ${{github.head_ref}}
+            fetch-depth: 0
+        - name: Fetch develop
+          run: git fetch origin develop
+        - name: Merge develop into feature branch
+          run: git merge origin/develop
+        - name: Install Dependencies
+          run: npm ci
+          working-directory: app-ui
+        - name: Perform Unit Testing
+          run: npm run test:unit
+          working-directory: app-ui
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+       - name: Checkout Code and Feature Branch
+         uses: actions/checkout@v4
+       - name: Merge develop into feature branch
+         run: git merge origin/develop
+       - name: Set up Node.js
+         uses: actions/setup-node@v4
+       - name: Install Dependencies
+         run: npm ci
+       - name: Perform Integration Testing
+         run: npm run test:integration
+         working-directory: app-ui
+       - name: Upload Logs
+         uses: actions/upload-artifact@v4
+         with:
+            name: frontend-test-artifacts
+            path: |
+                app-ui/test-logs/*.log

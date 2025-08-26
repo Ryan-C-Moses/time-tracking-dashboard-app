@@ -36,7 +36,7 @@ services:
       - time-tracking-dashboard-network
 
   ttd-db:
-    image: postgres
+    image: postgres:17.6
     restart: always
     shm_size: 128mb
     env_file:

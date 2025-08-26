@@ -91,29 +91,4 @@ jobs:
         with:
           name: backend-test-artifacts
           path: |
-            app-backend/logs/*.log
-
-  create-pr:
-    name: 🚀 Create PR to Develop
-    needs: [unit-tests, integration-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{github.head_ref}}
-          fetch-depth: 0
-      - name: Configure Git
-        run: |
-          git config user.name "$USERNAME"
-          git config user.email "$EMAIL"
-      - name: Creating Pull Request for Develop Branch
-        run: |
-          # Check if a PR already exists to avoid duplicates
-          gh pr list --head ${{github.head_ref}} --base develop --state open --json number | grep -q 'number' \
-          && echo "🔁 PR already exists." \
-          || gh pr create \
-              --title "Automated PR: ${{github.head_ref}} → Development" \
-              --body "This pull request was created automatically by GitHub Actions." \
-              --base develop \
-              --head ${{github.head_ref}}
+            app-backend/test-logs/*.log
