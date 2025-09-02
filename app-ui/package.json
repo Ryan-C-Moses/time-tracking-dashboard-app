@@ -8,10 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "test:unit": "vitest tests/unit",
-    "test:integration": "vitest tests/integration", 
+    "test:integration": "vitest tests/integration",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
     "dotenv": "^17.2.1",
     "path": "^0.12.7",

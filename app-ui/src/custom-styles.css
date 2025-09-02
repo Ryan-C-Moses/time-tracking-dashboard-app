@@ -1,0 +1,64 @@
+:root {
+  --app-white: #fff;
+  --app-black: #000;
+  --app-navy-950: #0e1323;
+  --app-navy-900: #1c204b;
+  --app-navy-800: #33397a;
+  --app-navy-200: #bbc0ff;
+  --app-orange-300: #ff8b64;
+  --app-purple-700: #7335d2;
+  --app-purple-600: #5747ea;
+  --app-purple-500: #7078c9;
+  --app-blue-300: #55c2e6;
+  --app-pink-400: #ff5e7d;
+  --app-green-400: #4bcf82;
+  --app-yellow-300: #f1c75b;
+  --app-grey-200: #d8d8d8;
+}
+
+@layer components {
+  .txt-preset-1 {
+    font-size: 3.5rem;
+    line-height: 66px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-2 {
+    font-size: 2.5rem;
+    line-height: 47px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-3 {
+    font-size: 2rem;
+    line-height: 38px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-4 {
+    font-size: 1.5rem;
+    line-height: 38px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-5-md {
+    font-size: 1.125rem;
+    line-height: 21px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-5-reg {
+    font-size: 1.125rem;
+    line-height: 21px;
+    letter-spacing: 0px;
+  }
+  .txt-preset-6 {
+    font-size: 0.938rem;
+    line-height: 18px;
+    letter-spacing: 0px;
+  }
+  .rubik-light {
+    font-weight: 300;
+  }
+  .rubik-reg {
+    font-weight: 400;
+  }
+  .rubik-md {
+    font-weight: 500;
+  }
+}

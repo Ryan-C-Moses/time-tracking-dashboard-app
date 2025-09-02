@@ -1,8 +1,7 @@
 const UI = () => {
+  return <div className='bg-(--app-navy-950) w-full h-screen'>
 
-    return (
-        <div>Hello From UI</div>
-    );
-}
+  </div>;
+};
 
 export default UI;
