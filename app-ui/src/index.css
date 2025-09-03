@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-@import "tailwindcss";
-@import "./custom-styles.css";
+@import 'tailwindcss';
+@import './custom-styles.css';
 
 :root {
-  font-family: "Rubik", sans-serif;
+  font-family: 'Rubik', sans-serif;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -11,9 +11,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  width: 100%;
+  height: 100%; /* Or height: 100vh; */
+}
 
 body {
   margin: 0;
   min-width: 320px;
+  border: solid 4px magenta;
   min-height: 100vh;
 }
