@@ -19,6 +19,9 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  border: solid 4px magenta;
   min-height: 100vh;
+}
+
+.fix-scroll {
+  scrollbar-gutter: stable;
 }

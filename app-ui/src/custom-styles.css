@@ -14,6 +14,12 @@
   --app-green-400: #4bcf82;
   --app-yellow-300: #f1c75b;
   --app-grey-200: #d8d8d8;
+  --card-light-orange: hsl(15, 100%, 70%);
+  --card-soft-blue: hsl(195, 74%, 62%);
+  --card-light-red: hsl(348, 100%, 68%);
+  --card-lime-green: hsl(145, 58%, 55%);
+  --card-violet: hsl(264, 64%, 52%);
+  --card-soft-yellow: hsl(43, 84%, 65%);
 }
 
 @layer components {
