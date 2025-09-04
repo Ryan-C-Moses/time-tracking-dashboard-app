@@ -17,7 +17,7 @@ const TaskCard = ({ task }) => {
           alt={`${category} img`}
         />
       </div>
-      <div className='flex w-full items-center justify-between mt-10 flex-wrap bg-(--app-navy-900) z-10 px-6 py-7 rounded-2xl'>
+      <div className='flex w-full items-center justify-between mt-10 flex-wrap bg-(--app-navy-900) z-10 px-6 py-7 rounded-2xl hover:bg-(--app-navy-800)'>
         <div className='flex basis-full justify-between mb-2'>
           <h5 className='txt-preset-5-md rubik-md'>{title}</h5>
           <i className='text-(--app-navy-200) fa-solid fa-ellipsis'></i>

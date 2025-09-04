@@ -6,3 +6,5 @@ export const categoryColors = {
     social: 'bg-(--card-violet)',
     selfCare: 'bg-(--card-soft-yellow)'
 }
+
+export const timeFrames = ['Daily', 'Weekly', 'Monthly'];
