@@ -1,22 +1,27 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const AddDeleteBox = ({ setTaskList, cardId, setShowActions }) => {
   const onAdd = () => {
+    const id = uuidv4();
+
     setTaskList((prev) => [
       ...prev,
       {
         category: 'work',
         title: "Ryan's Working",
         timeframe: 'daily',
-        current: 3,
+        duration: 3,
         previous: 4,
+        id,
       },
     ]);
     setShowActions(false);
   };
 
   const onDelete = () => {
-    setTaskList(prev => prev.filter((item) => item.id !== cardId));
+    setTaskList((prev) => prev.filter((item) => item.id !== cardId));
     setShowActions(false);
-  }
+  };
 
   return (
     <div className='flex items-center justify-between w-18 p-1 absolute top-[2px] right-1 z-10'>
@@ -30,8 +35,9 @@ const AddDeleteBox = ({ setTaskList, cardId, setShowActions }) => {
           add_box
         </span>
       </button>
-      <button className='duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-red-800 hover:border-red-600 active:border-3'
-      onClick={onDelete}
+      <button
+        className='duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-red-800 hover:border-red-600 active:border-3'
+        onClick={onDelete}
       >
         <span className='material-symbols-outlined text-red-600'>delete</span>
       </button>

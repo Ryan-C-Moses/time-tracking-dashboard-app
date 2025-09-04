@@ -12,12 +12,12 @@ const TaskEntryForm = ({setShowForm}) => {
         className='bg-cyan-800 flex flex-col px-7 pt-10 pb-7 rounded-xl'
       >
         <div className='flex items-center justify-between mb-5'>
-          <div className='flex flex-col mr-3'>
+          <div className='flex flex-col mr-3 w-full'>
             <label className='txt-preset-5-md mb-1  mr-2' htmlFor='title'>
               Title
             </label>
             <input
-              className='bg-neutral-300 h-8 rounded-lg'
+              className='bg-neutral-300 h-8 rounded-lg p-1'
               type='text'
               name='title'
               id='title'
