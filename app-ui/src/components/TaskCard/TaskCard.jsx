@@ -5,10 +5,10 @@ import { getImageUrl } from '../../utils/image-utils';
 import { previousLabels } from '../../utils/constants';
 import AddDeleteBox from '../AddDeleteBox/AddDeleteBox';
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, setTaskList }) => {
   const [showActions, setShowActions] = useState(false);
 
-  const { category, title, current, previous, timeframe } = task;
+  const { category, title, current, previous, timeframe, id } = task;
 
   const handleClick = () => {
     setShowActions(!showActions);
@@ -39,7 +39,7 @@ const TaskCard = ({ task }) => {
           showActions ? 'pt-9' : null
         )}
       >
-        {showActions && <AddDeleteBox />}
+        {showActions && <AddDeleteBox setTaskList={setTaskList} cardId={id} setShowActions={setShowActions}/>}
           <div className='flex basis-full justify-between mb-2'>
             <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>{title}</h5>
             <button onClick={handleClick}>

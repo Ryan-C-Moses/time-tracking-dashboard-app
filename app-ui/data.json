@@ -1,25 +1,25 @@
 [
-  { "category": "work", "title": "Work", "timeframe": "daily", "current": 5, "previous": 7 },
-  { "category": "work", "title": "Work", "timeframe": "weekly", "current": 32, "previous": 36 },
-  { "category": "work", "title": "Work", "timeframe": "monthly", "current": 103, "previous": 128 },
+  { "category": "work", "title": "Work", "timeframe": "daily", "current": 5, "previous": 7, "id": "049199af-a921-45dd-9f6d-c6a4340dae2e" },
+  { "category": "work", "title": "Work", "timeframe": "weekly", "current": 32, "previous": 36, "id": "fa39d91d-8971-425a-997b-71efe1a4c540" },
+  { "category": "work", "title": "Work", "timeframe": "monthly", "current": 103, "previous": 128, "id": "ab0ce77c-4846-4555-9391-733327dee5f0" },
 
-  { "category": "play", "title": "Play", "timeframe": "daily", "current": 1, "previous": 2 },
-  { "category": "play", "title": "Play", "timeframe": "weekly", "current": 10, "previous": 8 },
-  { "category": "play", "title": "Play", "timeframe": "monthly", "current": 23, "previous": 29 },
+  { "category": "play", "title": "Play", "timeframe": "daily", "current": 1, "previous": 2, "id": "0b232a2f-a86f-4947-9e68-110f3505ec43" },
+  { "category": "play", "title": "Play", "timeframe": "weekly", "current": 10, "previous": 8, "id": "064e520c-c8e3-4f0b-96d2-e18eb92c19b0" },
+  { "category": "play", "title": "Play", "timeframe": "monthly", "current": 23, "previous": 29, "id": "3056b502-ffc7-444b-a7d9-76a688f06e77" },
 
-  { "category": "study", "title": "Study", "timeframe": "daily", "current": 0, "previous": 1 },
-  { "category": "study", "title": "Study", "timeframe": "weekly", "current": 4, "previous": 7 },
-  { "category": "study", "title": "Study", "timeframe": "monthly", "current": 13, "previous": 19 },
+  { "category": "study", "title": "Study", "timeframe": "daily", "current": 0, "previous": 1, "id": "6740b253-7fac-4c92-8216-19d1e189f583" },
+  { "category": "study", "title": "Study", "timeframe": "weekly", "current": 4, "previous": 7, "id": "e51ae141-143c-4298-b9a2-836780c80056" },
+  { "category": "study", "title": "Study", "timeframe": "monthly", "current": 13, "previous": 19, "id": "9a59f66d-a39f-4390-b2bb-92f7b805db54" },
 
-  { "category": "exercise", "title": "Exercise", "timeframe": "daily", "current": 1, "previous": 1 },
-  { "category": "exercise", "title": "Exercise", "timeframe": "weekly", "current": 4, "previous": 5 },
-  { "category": "exercise", "title": "Exercise", "timeframe": "monthly", "current": 11, "previous": 18 },
+  { "category": "exercise", "title": "Exercise", "timeframe": "daily", "current": 1, "previous": 1, "id": "37bf38cc-1dd8-4384-9701-28336d910c15" },
+  { "category": "exercise", "title": "Exercise", "timeframe": "weekly", "current": 4, "previous": 5, "id": "278b5848-0366-4447-94bf-6e83a2519e2e" },
+  { "category": "exercise", "title": "Exercise", "timeframe": "monthly", "current": 11, "previous": 18, "id": "e7db2b53-1605-4969-8f30-43e5b2dd7bb3" },
 
-  { "category": "social", "title": "Social", "timeframe": "daily", "current": 1, "previous": 3 },
-  { "category": "social", "title": "Social", "timeframe": "weekly", "current": 5, "previous": 10 },
-  { "category": "social", "title": "Social", "timeframe": "monthly", "current": 21, "previous": 23 },
+  { "category": "social", "title": "Social", "timeframe": "daily", "current": 1, "previous": 3, "id": "16bcdc06-8bf7-4d7a-aed4-1911d1c53209" },
+  { "category": "social", "title": "Social", "timeframe": "weekly", "current": 5, "previous": 10, "id": "ad310b41-cb42-4d57-82ce-1a79e3925982" },
+  { "category": "social", "title": "Social", "timeframe": "monthly", "current": 21, "previous": 23, "id": "d8137879-2364-46f6-b84a-2a701731e60f" },
 
-  { "category": "self-care", "title": "Self Care", "timeframe": "daily", "current": 0, "previous": 1 },
-  { "category": "self-care", "title": "Self Care", "timeframe": "weekly", "current": 2, "previous": 2 },
-  { "category": "self-care", "title": "Self Care", "timeframe": "monthly", "current": 7, "previous": 11 }
+  { "category": "self-care", "title": "Self Care", "timeframe": "daily", "current": 0, "previous": 1, "id": "5a29ba6d-93c6-4b8e-b3d6-5436b35afb70" },
+  { "category": "self-care", "title": "Self Care", "timeframe": "weekly", "current": 2, "previous": 2, "id": "0b185d13-7bdf-41f6-b3a9-d3cb86be1ebe" },
+  { "category": "self-care", "title": "Self Care", "timeframe": "monthly", "current": 7, "previous": 11, "id": "3f7c6120-4b06-4700-8678-600c9b73a76e" }
 ]
