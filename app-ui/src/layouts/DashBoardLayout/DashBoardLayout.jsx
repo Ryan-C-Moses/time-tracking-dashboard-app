@@ -7,6 +7,7 @@ import AddTaskBtn from '../../components/AddTask/AddTaskBtn';
 const DashBoardLayout = () => {
   const [taskList, setTaskList] = useState(null);
   const [timeFrame, setTimeFrame] = useState('Daily');
+  const [showForm, setShowForm] = useState(null);
 
   const fetchData = async () => {
     const response = await fetch('../../../data.json');
@@ -31,9 +32,9 @@ const DashBoardLayout = () => {
 
   return (
     <div className='text-(--app-white) h-[90vh] overflow-auto snap-start'>
-      <AddTaskBtn />
+      <AddTaskBtn setShowForm={setShowForm} />
       <UserCard setTimeFrame={setTimeFrame} />
-      <TaskEntryForm />
+      {showForm && <TaskEntryForm setShowForm={setShowForm}/>}
       {taskList && renderTasks}
     </div>
   );
