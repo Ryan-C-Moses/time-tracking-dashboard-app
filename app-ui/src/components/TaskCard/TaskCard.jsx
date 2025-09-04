@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import { categoryColors } from '../../utils/constants';
 import { getImageUrl } from '../../utils/image-utils';
+import { previousLabels } from '../../utils/constants';
 
 const TaskCard = ({ task }) => {
-  const { category, title, current, previous } = task;
+  const { category, title, current, previous, timeframe } = task;
 
   return (
     <div className='flex flex-col mb-[24px] overflow-clip relative'>
@@ -24,7 +25,7 @@ const TaskCard = ({ task }) => {
         </div>
         <p className='txt-preset-3 rubik-light'>{current}hrs</p>
         <p className='text-(--app-navy-200) txt-preset-6 rubik-reg'>
-          {`Previous - ${previous}hrs`}
+          {`${previousLabels[timeframe]} - ${previous}hrs`}
         </p>
       </div>
     </div>

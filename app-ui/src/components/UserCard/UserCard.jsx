@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import TimeFrameBtn from '../TimeFrameBtn/TimeFrameBtn.jsx';
-import { timeFrames } from '../../utils/constants';
+import { timeframes } from '../../utils/constants';
 
 const UserCard = ({ setTimeFrame }) => {
   const [activeBtn, setActiveBtn] = useState('Daily');
 
-  const toggleBtns = timeFrames.map((val, idx) => (
+  const toggleBtns = timeframes.map((val, idx) => (
     <TimeFrameBtn
       key={idx}
       value={val}

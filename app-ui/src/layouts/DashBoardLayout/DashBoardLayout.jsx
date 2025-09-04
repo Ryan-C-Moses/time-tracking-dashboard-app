@@ -18,7 +18,7 @@ const DashBoardLayout = () => {
 
   const renderTasks = taskList
     ?.filter((task) => task.timeframe === timeFrame.toLocaleLowerCase())
-    .map((task, idx) => <TaskCard key={idx} task={task} />);
+    .map((task, idx) => <TaskCard key={idx} task={task} timeFrame={timeFrame} />);
 
   return (
     <div className='text-(--app-white) h-[90vh] overflow-auto snap-start'>
