@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
+import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
 
 const DashBoardLayout = () => {
   const [taskList, setTaskList] = useState(null);
@@ -18,11 +19,19 @@ const DashBoardLayout = () => {
 
   const renderTasks = taskList
     ?.filter((task) => task.timeframe === timeFrame.toLocaleLowerCase())
-    .map((task, idx) => <TaskCard key={idx} task={task} timeFrame={timeFrame} setTaskList={setTaskList} />);
+    .map((task, idx) => (
+      <TaskCard
+        key={idx}
+        task={task}
+        timeFrame={timeFrame}
+        setTaskList={setTaskList}
+      />
+    ));
 
   return (
     <div className='text-(--app-white) h-[90vh] overflow-auto snap-start'>
       <UserCard setTimeFrame={setTimeFrame} />
+      <TaskEntryForm />
       {taskList && renderTasks}
     </div>
   );

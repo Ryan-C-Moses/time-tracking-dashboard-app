@@ -8,7 +8,7 @@ import AddDeleteBox from '../AddDeleteBox/AddDeleteBox';
 const TaskCard = ({ task, setTaskList }) => {
   const [showActions, setShowActions] = useState(false);
 
-  const { category, title, current, previous, timeframe, id } = task;
+  const { category, title, duration, previous, timeframe, id } = task;
 
   const handleClick = () => {
     setShowActions(!showActions);
@@ -46,7 +46,7 @@ const TaskCard = ({ task, setTaskList }) => {
               <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
             </button>
           </div>
-          <p className={clsx('txt-preset-3 rubik-light', isPulse)}>{current}hrs</p>
+          <p className={clsx('txt-preset-3 rubik-light', isPulse)}>{duration}hrs</p>
           <p className={clsx('text-(--app-navy-200) txt-preset-6 rubik-reg', isPulse)}>
             {`${previousLabels[timeframe]} - ${previous}hrs`}
           </p>
