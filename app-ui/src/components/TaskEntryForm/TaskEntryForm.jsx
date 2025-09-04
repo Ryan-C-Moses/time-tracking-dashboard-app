@@ -34,7 +34,7 @@ const TaskEntryForm = () => {
           </div>
         </div>
         <div className='w-50 mb-3 flex justify-between items-center'>
-          <label className='txt-preset-5-md mr-2' htmlFor='timeframe'>
+          <label className='txt-preset-5-md' htmlFor='timeframe'>
             Timeframe
           </label>
           <select
@@ -48,7 +48,7 @@ const TaskEntryForm = () => {
           </select>
         </div>
         <div className='w-50 flex justify-between items-center mb-5'>
-          <label className='txt-preset-5-md mr-2' htmlFor='category'>
+          <label className='txt-preset-5-md' htmlFor='category'>
             Category
           </label>
           <select
