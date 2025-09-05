@@ -27,6 +27,8 @@ const DashBoardLayout = () => {
         task={task}
         timeFrame={timeFrame}
         setTaskList={setTaskList}
+        setShowForm={setShowForm}
+        showForm={showForm}
       />
     ));
 
@@ -34,7 +36,9 @@ const DashBoardLayout = () => {
     <div className='text-(--app-white) h-[90vh] overflow-auto snap-start'>
       <AddTaskBtn setShowForm={setShowForm} />
       <UserCard setTimeFrame={setTimeFrame} />
-      {showForm && <TaskEntryForm setShowForm={setShowForm}/>}
+      {showForm && (
+        <TaskEntryForm setShowForm={setShowForm} setTaskList={setTaskList} />
+      )}
       {taskList && renderTasks}
     </div>
   );

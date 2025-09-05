@@ -5,7 +5,7 @@ import { getImageUrl } from '../../utils/image-utils';
 import { previousLabels } from '../../utils/constants';
 import AddDeleteBox from '../AddDeleteBox/AddDeleteBox';
 
-const TaskCard = ({ task, setTaskList }) => {
+const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
   const [showActions, setShowActions] = useState(false);
 
   const { category, title, duration, previous, timeframe, id } = task;
@@ -24,7 +24,7 @@ const TaskCard = ({ task, setTaskList }) => {
           category === 'self-care'
             ? categoryColors['selfCare']
             : categoryColors[category],
-            isPulse
+          isPulse
         )}
       >
         <img
@@ -39,28 +39,37 @@ const TaskCard = ({ task, setTaskList }) => {
           showActions ? 'pt-9' : null
         )}
       >
-        {showActions && <AddDeleteBox setTaskList={setTaskList} cardId={id} setShowActions={setShowActions}/>}
-          <div className='flex basis-full justify-between mb-2'>
-            <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>{title}</h5>
-            <button onClick={handleClick}>
-              <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
-            </button>
-          </div>
-          <p className={clsx('txt-preset-3 rubik-light', isPulse)}>{duration}hrs</p>
-          <p className={clsx('text-(--app-navy-200) txt-preset-6 rubik-reg', isPulse)}>
-            {`${previousLabels[timeframe]} - ${previous}hrs`}
-          </p>
+        {showActions && (
+          <AddDeleteBox
+            setTaskList={setTaskList}
+            cardId={id}
+            setShowActions={setShowActions}
+            setShowForm={setShowForm}
+            isFormOpen={showForm}
+          />
+        )}
+        <div className='flex basis-full justify-between mb-2'>
+          <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>{title}</h5>
+          <button onClick={handleClick}>
+            <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
+          </button>
+        </div>
+        <p className={clsx('txt-preset-3 rubik-light', isPulse)}>
+          {duration}
+          {Number(duration) === 1 ? 'hr' : 'hrs'}
+        </p>
+        <p
+          className={clsx(
+            'text-(--app-navy-200) txt-preset-6 rubik-reg',
+            isPulse
+          )}
+        >
+          {previousLabels[timeframe]} - {previous}
+          {previous === 1 ? 'hr' : 'hrs'}
+        </p>
       </div>
     </div>
   );
 };
 
 export default TaskCard;
-
-// Work
-//   5hrs <!-- daily -->
-//   Previous - 7hrs <!-- daily -->
-//   32hrs <!-- weekly -->
-//   Previous - 36hrs <!-- weekly -->
-//   103hrs <!-- monthly -->
-//   Previous - 128hrs <!-- monthly -->

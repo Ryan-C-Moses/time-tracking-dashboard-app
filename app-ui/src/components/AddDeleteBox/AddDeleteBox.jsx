@@ -1,20 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
+import clsx from "clsx";
 
-const AddDeleteBox = ({ setTaskList, cardId, setShowActions }) => {
+const AddDeleteBox = ({ setTaskList, cardId, isFormOpen, setShowActions, setShowForm }) => {
   const onAdd = () => {
-    const id = uuidv4();
-
-    setTaskList((prev) => [
-      ...prev,
-      {
-        category: 'work',
-        title: "Ryan's Working",
-        timeframe: 'daily',
-        duration: 3,
-        previous: 4,
-        id,
-      },
-    ]);
+    setShowForm(true);
     setShowActions(false);
   };
 
@@ -23,18 +11,23 @@ const AddDeleteBox = ({ setTaskList, cardId, setShowActions }) => {
     setShowActions(false);
   };
 
+  const showTwoBtns = 'w-18 top-[2px] right-0 justify-between';
+  const showOneBtn = 'right-[18px]';
+
   return (
-    <div className='flex items-center justify-between w-18 p-1 absolute top-[2px] right-1 z-10'>
-      <button
-        className={
-          'duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-green-800 hover:border-(--app-green-400) active:border-3'
-        }
-        onClick={onAdd}
-      >
-        <span className='material-symbols-outlined text-(--app-green-400)'>
-          add_box
-        </span>
-      </button>
+    <div className={clsx('flex items-center p-1 absolute top-[2px] z-10', isFormOpen ? showOneBtn : showTwoBtns)}>
+      {!isFormOpen && (
+        <button
+          className={
+            'duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-green-800 hover:border-(--app-green-400) active:border-3'
+          }
+          onClick={onAdd}
+        >
+          <span className='material-symbols-outlined text-(--app-green-400)'>
+            add_box
+          </span>
+        </button>
+      )}
       <button
         className='duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-red-800 hover:border-red-600 active:border-3'
         onClick={onDelete}

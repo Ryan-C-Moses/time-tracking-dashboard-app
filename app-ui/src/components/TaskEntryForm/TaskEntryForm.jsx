@@ -1,6 +1,30 @@
-import ExitFormBtn from "../ExitFormBtn/ExitFormBtn";
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskEntryForm = ({setShowForm}) => {
+const TaskEntryForm = ({ setShowForm, setTaskList }) => {
+  const [formValues, setFormValues] = useState({
+    category: 'work',
+    title: '',
+    timeframe: 'daily',
+    duration: 0,
+    previous: '',
+  });
+
+  const handleChange = (e) => {
+    setFormValues((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const id = uuidv4();
+    const newTask = { ...formValues, id };
+    setShowForm(false);
+    setTaskList((prev) => [...prev, newTask]);
+  };
+
   return (
     <div className='rubik-md mt-[30px] mb-[24px] text-(--app-black) relative'>
       <p className='txt-preset-6 border border-neutral-200 size-fit bg-(--app-purple-700) py-1 px-2 rounded-lg absolute left-3 -top-3'>
@@ -8,8 +32,8 @@ const TaskEntryForm = ({setShowForm}) => {
       </p>
       <ExitFormBtn setShowForm={setShowForm} />
       <form
-        action='#'
         className='bg-cyan-800 flex flex-col px-7 pt-10 pb-7 rounded-xl'
+        onSubmit={handleSubmit}
       >
         <div className='flex items-center justify-between mb-5'>
           <div className='flex flex-col mr-3 w-full'>
@@ -21,18 +45,22 @@ const TaskEntryForm = ({setShowForm}) => {
               type='text'
               name='title'
               id='title'
+              value={formValues.title}
+              onChange={handleChange}
             />
           </div>
-          <div className="flex flex-col">
+          <div className='flex flex-col'>
             <label className='txt-preset-5-md mb-1' htmlFor='duration'>
               Duration
             </label>
             <input
               className='text-center w-10 h-8 bg-neutral-300 rounded-md'
-              min="1"
+              min='1'
               type='number'
               name='duration'
               id='duration'
+              value={formValues.duration}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -44,6 +72,8 @@ const TaskEntryForm = ({setShowForm}) => {
             className='bg-neutral-300 w-25 p-1 rounded-lg'
             name='timeframe'
             id='timeframe'
+            value={formValues.timeframe}
+            onChange={handleChange}
           >
             <option value='daily'>Daily</option>
             <option value='weekly'>Weekly</option>
@@ -58,6 +88,8 @@ const TaskEntryForm = ({setShowForm}) => {
             className='bg-neutral-300 w-25 p-1 rounded-lg'
             name='category'
             id='category'
+            value={formValues.category}
+            onChange={handleChange}
           >
             <option value='work'>Work</option>
             <option value='play'>Play</option>
@@ -67,7 +99,9 @@ const TaskEntryForm = ({setShowForm}) => {
             <option value='self-care'>Self Care</option>
           </select>
         </div>
-        <button className='txt-preset-5-md p-4 rounded-lg bg-indigo-300 hover:bg-cyan-600 hover:border-2 hover:border-indigo-300'>Add Entry</button>
+        <button className='txt-preset-5-md p-4 rounded-lg bg-indigo-300 hover:bg-cyan-600 hover:border-2 hover:border-indigo-300'>
+          Add Entry
+        </button>
       </form>
     </div>
   );
