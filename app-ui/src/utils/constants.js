@@ -4,7 +4,7 @@ export const categoryColors = {
   study: 'bg-(--card-light-red)',
   exercise: 'bg-(--card-lime-green)',
   social: 'bg-(--card-violet)',
-  selfCare: 'bg-(--card-soft-yellow)',
+  'self-care': 'bg-(--card-soft-yellow)',
 };
 
 export const timeframes = ['Daily', 'Weekly', 'Monthly'];

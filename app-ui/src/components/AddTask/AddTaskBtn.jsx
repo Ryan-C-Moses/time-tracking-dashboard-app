@@ -8,7 +8,7 @@ const AddTaskBtn = ({ setShowForm }) => {
         onClick={handleClick}
     >
       <p className='mr-2'>Add Task</p>
-      <i className='fa-solid fa-plus'></i>
+      <i className='fa-solid fa-plus' data-testid="icon"></i>
     </button>
   );
 };

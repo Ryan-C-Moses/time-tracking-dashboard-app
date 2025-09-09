@@ -21,11 +21,10 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
       <div
         className={clsx(
           'flex w-full h-20 rounded-t-2xl absolute',
-          category === 'self-care'
-            ? categoryColors['selfCare']
-            : categoryColors[category],
+          categoryColors[category],
           isPulse
         )}
+        data-testid='category-color'
       >
         <img
           className='absolute right-[24px] -top-1 w-[78px] h-[78px]'
@@ -50,7 +49,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
         )}
         <div className='flex basis-full justify-between mb-2'>
           <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>{title}</h5>
-          <button onClick={handleClick}>
+          <button onClick={handleClick} aria-label="show add and delete btn">
             <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
           </button>
         </div>

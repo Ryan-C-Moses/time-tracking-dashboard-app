@@ -15,13 +15,14 @@ const AddDeleteBox = ({ setTaskList, cardId, isFormOpen, setShowActions, setShow
   const showOneBtn = 'right-[18px]';
 
   return (
-    <div className={clsx('flex items-center p-1 absolute top-[2px] z-10', isFormOpen ? showOneBtn : showTwoBtns)}>
+    <div className={clsx('flex items-center p-1 absolute top-[2px] z-10', isFormOpen ? showOneBtn : showTwoBtns)} data-testid="add-delete-box">
       {!isFormOpen && (
         <button
           className={
             'duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-green-800 hover:border-(--app-green-400) active:border-3'
           }
           onClick={onAdd}
+          data-testid="add-btn"
         >
           <span className='material-symbols-outlined text-(--app-green-400)'>
             add_box
@@ -31,6 +32,7 @@ const AddDeleteBox = ({ setTaskList, cardId, isFormOpen, setShowActions, setShow
       <button
         className='duration-150 ease-in flex items-center justify-center border-2 border-white rounded-md hover:bg-red-800 hover:border-red-600 active:border-3'
         onClick={onDelete}
+        data-testid="delete-btn"
       >
         <span className='material-symbols-outlined text-red-600'>delete</span>
       </button>
