@@ -12,10 +12,11 @@ const SignInForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(fields);
+    setFields({ email: '', password: '' });
   };
 
   return (
-    <div className='flex flex-col justify-center items-center w-full bg-(--app-navy-800) rounded-lg p-4 bg-gradient-to-b from-indigo-500 via-(--app-purple-700) to-(--app-green-400) via-(purple-500) to-(--app-yellow-300)'>
+    <div className='flex flex-col justify-center items-center w-full max-w-sm bg-(--app-navy-800) rounded-lg p-4 bg-gradient-to-b from-indigo-500 via-(--app-purple-700) to-(--app-green-400) via-(purple-500) to-(--app-yellow-300)'>
       <div className={clsx('relative p-28 w-full', isPulse && 'animate-pulse')}>
         <span
           id='app-logo'
@@ -62,6 +63,7 @@ const SignInForm = () => {
             id='email'
             name='email'
             type='email'
+            value={fields.email}
             className='bg-zinc-300 p-1 w-full rounded-md'
             placeholder='Enter email'
             onMouseOver={handleMouseOver}
@@ -78,6 +80,7 @@ const SignInForm = () => {
             id='password'
             name='password'
             type='password'
+            value={fields.password}
             className='bg-zinc-300 p-1 w-full rounded-md'
             placeholder='Enter password'
             onMouseOver={handleMouseOver}
@@ -89,6 +92,12 @@ const SignInForm = () => {
           Submit
         </button>
       </form>
+      <div className='text-sm text-center mt-3'>
+        Challenge by <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
+          Frontend Mentor
+        </a>
+        . Coded by <a href='https://github.com/ryan-c-moses'>Ryan Moses</a>.
+      </div>
     </div>
   );
 };
