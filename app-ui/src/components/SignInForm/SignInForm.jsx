@@ -16,7 +16,10 @@ const SignInForm = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center w-full max-w-sm bg-(--app-navy-800) rounded-lg p-4 bg-gradient-to-b from-indigo-500 via-(--app-purple-700) to-(--app-green-400) via-(purple-500) to-(--app-yellow-300)'>
+    <div className='flex flex-col justify-center items-center w-full max-w-sm bg-(--app-navy-800) rounded-lg p-4 bg-gradient-to-b from-indigo-500 via-(--app-purple-700) to-(--app-green-400) via-(purple-500) to-(--app-yellow-300) relative'>
+        <div className="absolute bottom-0 right-0 text-xs p-1">
+            <p>v20250911</p>
+        </div>
       <div className={clsx('relative p-28 w-full', isPulse && 'animate-pulse')}>
         <span
           id='app-logo'
@@ -50,7 +53,7 @@ const SignInForm = () => {
           />
         </div>
       </div>
-      <h1 className='my-4 text-2xl'>Task Dashboard App, v1</h1>
+      <h1 className='my-4 text-2xl'>Task Dashboard</h1>
       <form
         className='py-7 px-4 w-full bg-(--card-violet) rounded-lg mb-1'
         onSubmit={handleSubmit}
@@ -92,7 +95,7 @@ const SignInForm = () => {
           Submit
         </button>
       </form>
-      <div className='text-sm text-center mt-3'>
+      <div className='text-xs text-center mt-3'>
         Challenge by <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
           Frontend Mentor
         </a>
