@@ -104,7 +104,7 @@ const SignInForm = () => {
       </form>
       <div className='flex text-xs w-full mb-1'>
         <p className='mr-1'>Don't have an account?</p>
-        <Link to="/register" className='text-blue-600' to='/register'>
+        <Link to='/register' className='text-blue-600'>
           Register
         </Link>
       </div>
