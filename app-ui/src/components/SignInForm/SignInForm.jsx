@@ -17,9 +17,9 @@ const SignInForm = () => {
 
   return (
     <div className='flex flex-col justify-center items-center w-full max-w-sm bg-(--app-navy-800) rounded-lg p-4 bg-gradient-to-b from-indigo-500 via-(--app-purple-700) to-(--app-green-400) via-(purple-500) to-(--app-yellow-300) relative'>
-        <div className="absolute bottom-0 right-0 text-xs p-1">
-            <p>v20250911</p>
-        </div>
+      <div className='absolute bottom-0 right-0 text-xs p-1'>
+        <p>v20250911</p>
+      </div>
       <div className={clsx('relative p-28 w-full', isPulse && 'animate-pulse')}>
         <span
           id='app-logo'
@@ -53,13 +53,14 @@ const SignInForm = () => {
           />
         </div>
       </div>
-      <h1 className='my-4 text-2xl'>Task Dashboard</h1>
+      <h1 className='my-4 text-3xl'>Task Dashboard</h1>
       <form
-        className='py-7 px-4 w-full bg-(--card-violet) rounded-lg mb-1'
+        className='py-5 px-4 w-full bg-(--card-violet) text-sm rounded-xl mb-5'
         onSubmit={handleSubmit}
       >
+        <h2 className='text-3xl mb-5'>Sign In</h2>
         <div className='flex justify-between items-center mb-4'>
-          <label className='mr-10' htmlFor='email'>
+          <label className='mr-9' htmlFor='email'>
             Email:
           </label>
           <input
@@ -95,8 +96,13 @@ const SignInForm = () => {
           Submit
         </button>
       </form>
-      <div className='text-xs text-center mt-3'>
-        Challenge by <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
+      <div className="flex text-xs w-full mb-1">
+        <p className="mr-1">Don't have an account?</p>
+        <a href=''>Sign Up</a>
+      </div>
+      <div className='w-full text-xs mb-3'>
+        Challenge by{' '}
+        <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
           Frontend Mentor
         </a>
         . Coded by <a href='https://github.com/ryan-c-moses'>Ryan Moses</a>.
