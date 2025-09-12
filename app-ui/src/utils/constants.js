@@ -1,3 +1,5 @@
+
+
 export const categoryColors = {
   work: 'bg-(--card-light-orange)',
   play: 'bg-(--card-soft-blue)',
@@ -14,3 +16,7 @@ export const previousLabels = {
   weekly: 'Last Week',
   monthly: 'Last Month',
 };
+
+export const redirectToHome = (navigate) => {
+  navigate('/home');  
+}

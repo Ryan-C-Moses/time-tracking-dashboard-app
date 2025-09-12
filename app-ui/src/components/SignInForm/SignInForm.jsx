@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { redirectToHome } from '../../utils/constants';
 import clsx from 'clsx';
 
 const SignInForm = () => {
   const [isPulse, setIsPulse] = useState(false);
   const [fields, setFields] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
   const handleMouseOver = () => setIsPulse(true);
   const handleMouseOut = () => setIsPulse(false);
@@ -13,6 +16,7 @@ const SignInForm = () => {
     e.preventDefault();
     console.log(fields);
     setFields({ email: '', password: '' });
+    redirectToHome(navigate);
   };
 
   return (
@@ -73,6 +77,7 @@ const SignInForm = () => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -90,15 +95,18 @@ const SignInForm = () => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             onChange={handleChange}
+            required
           />
         </div>
         <button className='bg-yellow-600 hover:bg-yellow-500 w-full p-2 rounded-lg mt-2'>
           Submit
         </button>
       </form>
-      <div className="flex text-xs w-full mb-1">
-        <p className="mr-1">Don't have an account?</p>
-        <a href=''>Sign Up</a>
+      <div className='flex text-xs w-full mb-1'>
+        <p className='mr-1'>Don't have an account?</p>
+        <Link to="/register" className='text-blue-600' to='/register'>
+          Register
+        </Link>
       </div>
       <div className='w-full text-xs mb-3'>
         Challenge by{' '}

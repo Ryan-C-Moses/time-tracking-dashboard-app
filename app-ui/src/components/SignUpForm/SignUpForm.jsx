@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router';
+import { redirectToHome } from '../../utils/constants';
 import clsx from 'clsx';
 
 const SignUpForm = () => {
@@ -9,6 +11,7 @@ const SignUpForm = () => {
     email: '',
     password: '',
   });
+  const navigate = useNavigate();
 
   const handleMouseOver = () => setIsPulse(true);
   const handleMouseOut = () => setIsPulse(false);
@@ -18,6 +21,7 @@ const SignUpForm = () => {
     e.preventDefault();
     console.log(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
+    redirectToHome(navigate);
   };
 
   return (
@@ -79,6 +83,7 @@ const SignUpForm = () => {
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
               onChange={handleChange}
+              required
             />
           </div>
           <div className='flex flex-col items-start'>
@@ -95,6 +100,7 @@ const SignUpForm = () => {
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
               onChange={handleChange}
+              required
             />
           </div>
         </div>
@@ -112,6 +118,7 @@ const SignUpForm = () => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -129,13 +136,20 @@ const SignUpForm = () => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             onChange={handleChange}
+            required
           />
         </div>
         <button className='bg-yellow-600 hover:bg-yellow-500 w-full p-2 rounded-lg mt-2'>
           Submit
         </button>
       </form>
-      <div className='w-full text-center text-xs mb-3'>
+      <div className='flex text-xs w-full mb-1'>
+        <p className='mr-1'>Already have an account?</p>
+        <Link to="/" className='text-blue-600'>
+          Sign In
+        </Link>
+      </div>
+      <div className='w-full text-xs mb-3'>
         Challenge by{' '}
         <a href='https://www.frontendmentor.io?ref=challenge' target='_blank'>
           Frontend Mentor
