@@ -3,6 +3,7 @@ import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
 import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
 import AddTaskBtn from '../../components/AddTask/AddTaskBtn';
+import SignOutBtn from '../../components/SignOutBtn/SignOutBtn';
 
 const DashBoardLayout = () => {
   const [taskList, setTaskList] = useState(null);
@@ -34,6 +35,7 @@ const DashBoardLayout = () => {
 
   return (
     <div className='text-(--app-white) h-[90vh] overflow-auto snap-start'>
+      <SignOutBtn />
       <AddTaskBtn setShowForm={setShowForm} />
       <UserCard setTimeFrame={setTimeFrame} />
       {showForm && (
