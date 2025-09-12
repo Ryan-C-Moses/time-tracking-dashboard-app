@@ -25,12 +25,16 @@ const TaskEntryForm = ({ setShowForm, setTaskList }) => {
     setTaskList((prev) => [...prev, newTask]);
   };
 
+  const exitForm = () => {
+    setShowForm(false);
+  }
+
   return (
     <div className='rubik-md mt-[30px] mb-[24px] text-(--app-black) relative'>
       <p className='txt-preset-6 border border-neutral-200 size-fit bg-(--app-purple-700) py-1 px-2 rounded-lg absolute left-3 -top-3'>
         Task Entry Form
       </p>
-      <ExitFormBtn setShowForm={setShowForm} />
+      <ExitFormBtn exitForm={exitForm} />
       <form
         className='bg-cyan-800 flex flex-col px-7 pt-10 pb-7 rounded-xl'
         onSubmit={handleSubmit}

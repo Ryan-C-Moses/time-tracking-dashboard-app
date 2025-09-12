@@ -3,18 +3,50 @@ import clsx from 'clsx';
 import { categoryColors } from '../../utils/constants';
 import { getImageUrl } from '../../utils/image-utils';
 import { previousLabels } from '../../utils/constants';
-import AddDeleteBox from '../AddDeleteBox/AddDeleteBox';
+import AddEditDeleteBox from '../AddEditDeleteBox/AddEditDeleteBox';
+import SaveBtn from '../SaveBtn/SaveBtn';
+import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
 const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
-  const [showActions, setShowActions] = useState(false);
-
   const { category, title, duration, previous, timeframe, id } = task;
+  const [showActions, setShowActions] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [updatedValues, setUpdatedValues] = useState({
+    title,
+    category,
+    duration,
+    timeframe,
+  });
 
   const handleClick = () => {
     setShowActions(!showActions);
   };
 
-  const isPulse = showActions ? 'animate-pulse opacity-20' : null;
+  const handleChange = (e) => {
+    setUpdatedValues((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const updateTask = () => {
+    setShowActions(false);
+    setEdit(false);
+    console.log(updatedValues);
+  };
+
+  const exitForm = () => {
+    setEdit(false);
+    setShowActions(true);
+    setUpdatedValues({
+      title,
+      category,
+      duration,
+      timeframe,
+    });
+  };
+
+  const isPulse = showActions || edit ? 'animate-pulse opacity-20' : null;
 
   return (
     <div className='flex flex-col mb-[24px] overflow-clip relative'>
@@ -38,34 +70,119 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
           showActions ? 'pt-9' : null
         )}
       >
-        {showActions && (
-          <AddDeleteBox
-            setTaskList={setTaskList}
-            cardId={id}
-            setShowActions={setShowActions}
-            setShowForm={setShowForm}
-            isFormOpen={showForm}
-          />
-        )}
-        <div className='flex basis-full justify-between mb-2'>
-          <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>{title}</h5>
-          <button onClick={handleClick} aria-label="show add and delete btn">
-            <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
-          </button>
-        </div>
-        <p className={clsx('txt-preset-3 rubik-light', isPulse)}>
-          {duration}
-          {Number(duration) === 1 ? 'hr' : 'hrs'}
-        </p>
-        <p
+        {edit && <ExitFormBtn exitForm={exitForm} />}
+        <div
           className={clsx(
-            'text-(--app-navy-200) txt-preset-6 rubik-reg',
-            isPulse
+            'flex basis-full justify-between mb-2',
+            edit ? 'flex-col' : 'items-center'
           )}
         >
-          {previousLabels[timeframe]} - {previous}
-          {previous === 1 ? 'hr' : 'hrs'}
-        </p>
+          {edit ? (
+            <>
+              <input
+                className='text-blue-600 bg-neutral-300 mb-3 h-8 rounded-lg p-1'
+                type='text'
+                name='title'
+                id='title'
+                value={updatedValues.title}
+                placeholder='Enter Title'
+                onChange={handleChange}
+              />
+            </>
+          ) : (
+            <h5 className={clsx('txt-preset-5-md rubik-md', isPulse)}>
+              {title}
+            </h5>
+          )}
+          {edit && (
+            <div className='w-44 text-sm flex justify-between items-center mb-1'>
+              <label htmlFor='category'>Category</label>
+              <select
+                className='bg-neutral-300 w-25 p-1 rounded-lg'
+                name='category'
+                id='category'
+                value={updatedValues.category}
+                onChange={handleChange}
+              >
+                <option value='work'>Work</option>
+                <option value='play'>Play</option>
+                <option value='study'>Study</option>
+                <option value='exercise'>Exercise</option>
+                <option value='social'>Social</option>
+                <option value='self-care'>Self Care</option>
+              </select>
+            </div>
+          )}
+          {showActions ? (
+            <AddEditDeleteBox
+              setTaskList={setTaskList}
+              cardId={id}
+              setShowActions={setShowActions}
+              setShowForm={setShowForm}
+              isFormOpen={showForm}
+              setEdit={setEdit}
+            />
+          ) : (
+            !edit && (
+              <button
+                onClick={handleClick}
+                aria-label='show add and delete btn'
+              >
+                <i className='text-(--app-navy-200) text-xl hover:text-(--app-white) z-20 fa-solid fa-ellipsis'></i>
+              </button>
+            )
+          )}
+        </div>
+        {edit ? (
+          <div className='flex items-center mt-1'>
+            <label className='text-sm mr-2' htmlFor='duration'>
+              Duration
+            </label>
+            <input
+              className='text-center text-blue-600 w-10 h-8 bg-neutral-300 rounded-md'
+              min='1'
+              type='number'
+              name='duration'
+              id='duration'
+              value={updatedValues.duration}
+              onChange={handleChange}
+            />
+          </div>
+        ) : (
+          <p className={clsx('txt-preset-3 rubik-light', isPulse)}>
+            {duration}
+            {Number(duration) === 1 ? 'hr' : 'hrs'}
+          </p>
+        )}
+        {edit ? (
+          <div className='flex items-center mt-1'>
+            <label className='text-sm mr-2' htmlFor='timeframe'>
+              Timeframe
+            </label>
+            <select
+              className='text-blue-600 bg-neutral-300 w-22 text-sm p-1 rounded-lg'
+              name='timeframe'
+              id='timeframe'
+              value={updatedValues.timeframe}
+              onChange={handleChange}
+            >
+              <option value='daily'>Daily</option>
+              <option value='weekly'>Weekly</option>
+              <option value='monthly'>Monthly</option>
+            </select>
+          </div>
+        ) : (
+          <p
+            className={clsx(
+              'text-(--app-navy-200) txt-preset-6 rubik-reg',
+              isPulse
+            )}
+          >
+            {previousLabels[timeframe]} - {previous}
+            {previous === 1 ? 'hr' : 'hrs'}
+          </p>
+        )}
+        {edit && <SaveBtn updateTask={updateTask} />}
       </div>
     </div>
   );

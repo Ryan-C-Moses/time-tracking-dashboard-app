@@ -16,7 +16,7 @@ const SignUpForm = () => {
   const handleMouseOver = () => setIsPulse(true);
   const handleMouseOut = () => setIsPulse(false);
   const handleChange = (e) =>
-    setFields((prev) => ({ ...prev, [e.target.name]: e.target.value.trim() }));
+    setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(fields);
