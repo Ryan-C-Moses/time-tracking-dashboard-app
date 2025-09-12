@@ -35,7 +35,7 @@ const AddEditDeleteBox = ({
         'flex items-center py-1 justify-between z-10',
         isFormOpen ? removeAddBtn : showAllBtns
       )}
-      data-testid='add-delete-box'
+      data-testid='add-edit-delete-box'
       onMouseLeave={hideActions}
     >
       {!isFormOpen && (

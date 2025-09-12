@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
-import AddDeleteBox from '../../src/components/AddDeleteBox/AddDeleteBox';
+import AddEditDeleteBox from '../../src/components/AddEditDeleteBox/AddEditDeleteBox';
 
-describe('AddDeleteBox unit test', () => {
+describe('addEditDeleteBox unit test', () => {
   let setTaskList, setShowForm, setShowActions;
 
   const baseProps = {
@@ -19,7 +19,7 @@ describe('AddDeleteBox unit test', () => {
 
   const setup = (overrides = {}) => {
     return render(
-      <AddDeleteBox
+      <AddEditDeleteBox
         {...baseProps}
         setTaskList={setTaskList}
         setShowForm={setShowForm}
@@ -38,22 +38,22 @@ describe('AddDeleteBox unit test', () => {
     expect(buttons[1]).toBeInTheDocument();
   });
 
-  it('renders with data-testid add-delete-box', () => {
+  it('renders with data-testid add-edit-delete-box', () => {
     setup();
-    const addDeleteBox = screen.getByTestId('add-delete-box');
-    expect(addDeleteBox).toBeInTheDocument();
+    const addEditDeleteBox = screen.getByTestId('add-edit-delete-box');
+    expect(addEditDeleteBox).toBeInTheDocument();
   });
 
-  it('applies two-button classes when isFormOpen is false', () => {
+  it('applies all-button classes when isFormOpen is false', () => {
     setup({ isFormOpen: false });
-    const addDeleteBox = screen.getByTestId('add-delete-box');
-    expect(addDeleteBox).toHaveClass('w-18 top-[2px] right-0 justify-between');
+    const addEditDeleteBox = screen.getByTestId('add-edit-delete-box');
+    expect(addEditDeleteBox).toHaveClass('w-24');
   });
 
   it('applies one-button classes when isFormOpen is true', () => {
     setup({ isFormOpen: true });
-    const addDeleteBox = screen.getByTestId('add-delete-box');
-    expect(addDeleteBox).not.toHaveClass(
+    const addEditDeleteBox = screen.getByTestId('add-edit-delete-box');
+    expect(addEditDeleteBox).not.toHaveClass(
       'w-18 top-[2px] right-0 justify-between'
     );
   });
@@ -67,7 +67,7 @@ describe('AddDeleteBox unit test', () => {
   it('hides Add button when isFormOpen is true', () => {
     setup({ isFormOpen: true });
     const buttons = screen.getAllByRole('button');
-    expect(buttons.length).toEqual(1);
+    expect(buttons.length).toEqual(2);
   });
 
   it('always shows Delete button', () => {

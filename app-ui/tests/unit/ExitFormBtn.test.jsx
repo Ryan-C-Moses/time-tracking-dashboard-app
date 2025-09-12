@@ -15,10 +15,10 @@ describe('ExitFormBtn Unit Test', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('hides form', async () => {
-    const setShowForm = vi.fn();
+  it('hides task entry form form', async () => {
+    const exitForm = vi.fn();
 
-    render(<ExitFormBtn setShowForm={setShowForm}/>);
+    render(<ExitFormBtn exitForm={exitForm}/>);
 
     const button = screen.getByRole('button', {
       name: /close task entry form/i,
@@ -26,6 +26,6 @@ describe('ExitFormBtn Unit Test', () => {
 
     await userEvent.click(button);
 
-    expect(setShowForm).toBeCalledWith(false);
+    expect(exitForm).toHaveBeenCalledOnce();
   });
 });

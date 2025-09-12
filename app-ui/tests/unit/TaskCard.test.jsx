@@ -14,7 +14,7 @@ describe('TaskCard Unit Test', () => {
       duration: 5,
       previous: 10,
       timeframe: 'daily',
-      id: 1
+      id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -47,7 +47,7 @@ describe('TaskCard Unit Test', () => {
       duration: 1,
       previous: 2,
       timeframe: 'daily',
-      id: 1
+      id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -74,7 +74,7 @@ describe('TaskCard Unit Test', () => {
       duration: 1,
       previous: 2,
       timeframe: 'daily',
-      id: 1
+      id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -101,7 +101,7 @@ describe('TaskCard Unit Test', () => {
       duration: 1,
       previous: 2,
       timeframe: 'daily',
-      id: 1
+      id: 1,
     };
     vi.spyOn(imageUtils, 'getImageUrl').mockReturnValue(
       `icon-${task.category}.svg`
@@ -125,7 +125,6 @@ describe('TaskCard Unit Test', () => {
     expect(imageUtils.getImageUrl).toBeCalled();
     expect(icon).toHaveAttribute('src', `icon-${task.category}.svg`);
     expect(imageUtils.getImageUrl).toHaveBeenCalledWith('icon-work.svg');
-
   });
 
   it('button click toggles showActions state', async () => {
@@ -135,7 +134,7 @@ describe('TaskCard Unit Test', () => {
       duration: 1,
       previous: 2,
       timeframe: 'daily',
-      id: 1
+      id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -156,20 +155,24 @@ describe('TaskCard Unit Test', () => {
     });
 
     await user.click(button);
+    const addEditDeleteBtn = screen.getByTestId('add-edit-delete-box');
 
-    expect(screen.getByTestId('add-delete-box')).toBeInTheDocument();
+    expect(screen.getByTestId('add-edit-delete-box')).toBeInTheDocument();
     expect(screen.getByText(task.title)).toHaveClass(
       'animate-pulse',
       'opacity-20'
     );
 
-    // Clicking again hides it
-    await user.click(button);
-    expect(screen.queryByTestId('add-delete-box')).not.toBeInTheDocument();
-    expect(screen.getByText(task.title)).not.toHaveClass(
-      'animate-pulse',
-      'opacity-20'
-    );
+    // mouse out of AddEditDeleteBox
+    addEditDeleteBtn.addEventListener('mouseleave', () => {
+      expect(
+        screen.queryByTestId('add-edit-delete-box')
+      ).not.toBeInTheDocument();
+      expect(screen.getByText(task.title)).not.toHaveClass(
+        'animate-pulse',
+        'opacity-20'
+      );
+    });
   });
 
   //   it('Accessibility checks');

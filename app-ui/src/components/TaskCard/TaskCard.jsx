@@ -79,8 +79,11 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
         >
           {edit ? (
             <>
+              <label className='text-sm mb-1 mr-2' htmlFor='title'>
+                Title
+              </label>
               <input
-                className='text-blue-600 bg-neutral-300 mb-3 h-8 rounded-lg p-1'
+                className='text-sm text-blue-600 bg-neutral-300 mb-3 h-8 rounded-lg p-1'
                 type='text'
                 name='title'
                 id='title'
@@ -98,7 +101,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
             <div className='w-44 text-sm flex justify-between items-center mb-1'>
               <label htmlFor='category'>Category</label>
               <select
-                className='bg-neutral-300 w-25 p-1 rounded-lg'
+                className='bg-neutral-300 text-blue-600 w-25 p-1 rounded-lg'
                 name='category'
                 id='category'
                 value={updatedValues.category}
