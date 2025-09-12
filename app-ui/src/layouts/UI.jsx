@@ -4,7 +4,8 @@ import SignUpPage from "../pages/SignUpPage";
 
 const UI = () => {
   return <div className='bg-(--app-navy-950) w-full h-screen'>
-    <SignInPage />
+    {/* <SignInPage /> */}
+    <SignUpPage />
     {/* <DashBoard /> */}
   </div>;
 };
