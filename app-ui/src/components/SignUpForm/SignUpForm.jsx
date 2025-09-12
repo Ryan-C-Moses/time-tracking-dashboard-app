@@ -69,7 +69,7 @@ const SignUpForm = () => {
       >
         <h2 className='text-3xl mb-4'>Register</h2>
         <div className='flex mb-4'>
-          <div className='flex flex-col mr-8 items-start'>
+          <div className='flex flex-col mr-6 items-start'>
             <label className='mb-1' htmlFor='fname'>
               First Name:
             </label>
