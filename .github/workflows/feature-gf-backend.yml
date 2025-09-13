@@ -22,6 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Validating Code with Unit Tests..."
+      - name: Configure Git
+        run: |
+          git config --global user.email "$EMAIL"
+          git config --global user.name "$USERNAME"
       - name: Checkout Code and Feature Branch
         uses: actions/checkout@v4
         with:
@@ -63,6 +67,10 @@ jobs:
       NODE_ENV: Testing
     steps:
       - run: echo "Postgres container is running"
+      - name: Configure Git
+        run: |
+          git config --global user.email "$EMAIL"
+          git config --global user.name "$USERNAME"
       - name: Checkout Code and Feature Branch
         uses: actions/checkout@v4
         with:
