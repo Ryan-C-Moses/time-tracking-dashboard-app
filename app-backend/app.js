@@ -46,7 +46,7 @@ const initApp = async () => {
   app.use(bodyParser.json());
   app.use(
     cors({
-      origin: process.env.CLIENT_URL,
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
@@ -167,7 +167,7 @@ const initApp = async () => {
   );
 
   app.post("/api/auth/register", taskRateLimiter, async (req, res) => {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, fname, lname } = req.body;
 
     try {
       const existingUser = await db.query(
@@ -183,7 +183,7 @@ const initApp = async () => {
 
       const result = await db.query(
         "INSERT INTO users (email, password_hash, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING *",
-        [email, hash, firstName, lastName]
+        [email, hash, fname, lname]
       );
 
       const [user] = result.rows;

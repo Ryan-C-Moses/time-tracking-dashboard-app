@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { redirectToLogin } from '../../utils/constants';
+import { register } from '../../services/auth';
 import clsx from 'clsx';
 
 const SignUpForm = () => {
@@ -19,7 +20,7 @@ const SignUpForm = () => {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(fields);
+    register(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
     redirectToLogin(navigate);
   };
