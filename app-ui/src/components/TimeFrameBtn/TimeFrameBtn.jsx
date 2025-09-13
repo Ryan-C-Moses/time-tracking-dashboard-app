@@ -1,0 +1,23 @@
+import clsx from 'clsx';
+
+const TimeFrameBtn = (props) => {
+  const { value, isActive, setActive, setTimeFrame } = props;
+
+  const handleClick = () => {
+    setActive(value);
+    setTimeFrame(value);
+  };
+
+  return (
+    <button
+      className={clsx(
+        isActive === value ? 'text-(--app-white)' : 'text-(--app-purple-500)'
+      )}
+      onClick={handleClick}
+    >
+      {value}
+    </button>
+  );
+};
+
+export default TimeFrameBtn;
