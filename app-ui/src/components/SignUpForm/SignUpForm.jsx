@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
-import { redirectToHome } from '../../utils/constants';
+import { redirectToLogin } from '../../utils/constants';
 import clsx from 'clsx';
 
 const SignUpForm = () => {
@@ -21,7 +21,7 @@ const SignUpForm = () => {
     e.preventDefault();
     console.log(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
-    redirectToHome(navigate);
+    redirectToLogin(navigate);
   };
 
   return (
@@ -145,7 +145,7 @@ const SignUpForm = () => {
       </form>
       <div className='flex text-xs w-full mb-1'>
         <p className='mr-1'>Already have an account?</p>
-        <Link to="/" className='text-blue-600'>
+        <Link to='/' className='text-blue-600'>
           Sign In
         </Link>
       </div>

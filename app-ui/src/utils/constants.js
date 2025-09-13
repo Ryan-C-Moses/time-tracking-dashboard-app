@@ -1,5 +1,3 @@
-
-
 export const categoryColors = {
   work: 'bg-(--card-light-orange)',
   play: 'bg-(--card-soft-blue)',
@@ -18,5 +16,9 @@ export const previousLabels = {
 };
 
 export const redirectToHome = (navigate) => {
-  navigate('/home');  
-}
+  navigate('/home');
+};
+
+export const redirectToLogin = (navigate) => {
+  navigate('/');
+};
