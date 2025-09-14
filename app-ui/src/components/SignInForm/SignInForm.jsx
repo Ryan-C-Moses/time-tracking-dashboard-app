@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { redirectToHome } from '../../utils/constants';
+import { login } from '../../services/auth';
+import { setUser } from '../../services/user';
 import clsx from 'clsx';
 
 const SignInForm = () => {
@@ -12,11 +14,15 @@ const SignInForm = () => {
   const handleMouseOut = () => setIsPulse(false);
   const handleChange = (e) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(fields);
+    const user = await login(fields);
     setFields({ email: '', password: '' });
-    redirectToHome(navigate);
+
+    if (user) {
+      setUser(user);
+      redirectToHome(navigate);
+    }
   };
 
   return (

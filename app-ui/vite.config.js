@@ -23,4 +23,9 @@ export default defineConfig({
       globals: true,
     },
   },
+  resolve: {
+    alias: {
+      winston: 'winston/browser',
+    },
+  },
 });

@@ -13,11 +13,10 @@ export const request = async (
       headers,
       body: body ? JSON.stringify(body) : undefined,
     });
-    const { token } = res.json();
+    const data = res.json();
 
-    TokenService.setToken(token);
+    return data;
   } catch (err) {
-    console.log(err.message);
-    console.log(err);
+    console.error(err.message);
   }
 };

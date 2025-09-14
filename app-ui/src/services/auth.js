@@ -1,11 +1,24 @@
 import { request } from './api';
+import * as TokenService from './token-store';
 
 export const register = async ({ fname, lname, email, password }) => {
-  const data = await request('/api/auth/register', {
+  const { token } = await request('/api/auth/register', {
     method: 'POST',
     body: { fname, lname, email, password },
   });
-  console.log(data);
+
+  // need to enable auto login
+  TokenService.setToken(token);
 };
 
-export const login = () => {};
+export const login = async ({ email, password }) => {
+  const data = await request('/api/auth/login', {
+    method: 'POST',
+    body: { email, password },
+    auth: true,
+  });
+
+  const { user, token } = data;
+  TokenService.setToken(token);
+  return user;
+};
