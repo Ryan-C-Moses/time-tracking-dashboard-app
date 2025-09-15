@@ -1,5 +1,7 @@
 import { request } from './api';
 import * as TokenService from './token-store';
+import { clearUser } from './user';
+import { redirectToLogin } from '../utils/constants';
 
 export const register = async ({ fname, lname, email, password }) => {
   const { token } = await request('/api/auth/register', {
@@ -7,7 +9,6 @@ export const register = async ({ fname, lname, email, password }) => {
     body: { fname, lname, email, password },
   });
 
-  // need to enable auto login
   TokenService.setToken(token);
 };
 
@@ -21,4 +22,10 @@ export const login = async ({ email, password }) => {
   const { user, token } = data;
   TokenService.setToken(token);
   return user;
+};
+
+export const logout = (nav) => {
+  clearUser();
+  TokenService.clearToken();
+  redirectToLogin(nav);
 };

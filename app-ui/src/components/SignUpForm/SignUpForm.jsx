@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
-import { redirectToLogin } from '../../utils/constants';
+import { redirectToHome } from '../../utils/constants';
 import { register } from '../../services/auth';
 import clsx from 'clsx';
 
@@ -22,7 +22,7 @@ const SignUpForm = () => {
     e.preventDefault();
     register(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
-    redirectToLogin(navigate);
+    redirectToHome(navigate);
   };
 
   return (

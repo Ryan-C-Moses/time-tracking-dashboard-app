@@ -1,15 +1,11 @@
 import { useNavigate } from 'react-router';
-import { redirectToLogin } from '../../utils/constants';
-import { clearToken } from '../../services/token-store';
-import { clearUser } from '../../services/user';
+import { logout } from '../../services/auth';
 
 const SignOutBtn = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    clearToken();
-    clearUser();
-    redirectToLogin(navigate);
+    logout(navigate);
   };
 
   return (
