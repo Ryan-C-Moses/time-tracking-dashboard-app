@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { createTask } from '../../services/task';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskEntryForm = ({ setShowForm, setTaskList }) => {
+const TaskEntryForm = ({ setShowForm, fetchData }) => {
   const [formValues, setFormValues] = useState({
     category: 'work',
     title: '',
     timeframe: 'daily',
     duration: 0,
-    previous: '',
   });
 
   const handleChange = (e) => {
@@ -17,12 +17,13 @@ const TaskEntryForm = ({ setShowForm, setTaskList }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const id = uuidv4();
     const newTask = { ...formValues, id };
+    await createTask(newTask)
     setShowForm(false);
-    setTaskList((prev) => [...prev, newTask]);
+    await fetchData();
   };
 
   const exitForm = () => {

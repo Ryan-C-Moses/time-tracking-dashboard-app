@@ -8,7 +8,7 @@ import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
 const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
-  const { category, title, duration, previous, timeframe, id } = task;
+  const { category, title, duration, previous, timeframe, task_id } = task;
   const [showActions, setShowActions] = useState(false);
   const [edit, setEdit] = useState(false);
   const [updatedValues, setUpdatedValues] = useState({
@@ -119,7 +119,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
           {showActions ? (
             <AddEditDeleteBox
               setTaskList={setTaskList}
-              cardId={id}
+              cardId={task_id}
               setShowActions={setShowActions}
               setShowForm={setShowForm}
               isFormOpen={showForm}

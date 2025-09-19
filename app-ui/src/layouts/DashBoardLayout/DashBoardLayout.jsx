@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getUser } from '../../services/user';
+import { fetchTasks } from '../../services/task';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
 import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
@@ -15,9 +16,9 @@ const DashBoardLayout = () => {
   const [user, setUser] = useState({});
 
   const fetchData = async () => {
+    setIsLoading(true);
     await fetchUser();
-    const response = await fetch('../../../data.json');
-    const data = await response.json();
+    const data = await fetchTasks();
     setTaskList(data);
     setIsLoading(false);
   };
@@ -33,9 +34,9 @@ const DashBoardLayout = () => {
 
   const renderTasks = taskList
     ?.filter((task) => task.timeframe === timeFrame.toLocaleLowerCase())
-    .map((task, idx) => (
+    .map((task) => (
       <TaskCard
-        key={idx}
+        key={task.task_id}
         task={task}
         timeFrame={timeFrame}
         setTaskList={setTaskList}
@@ -56,7 +57,7 @@ const DashBoardLayout = () => {
           {showForm && (
             <TaskEntryForm
               setShowForm={setShowForm}
-              setTaskList={setTaskList}
+              fetchData={fetchData}
             />
           )}
           {taskList && renderTasks}

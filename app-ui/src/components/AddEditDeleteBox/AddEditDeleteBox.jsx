@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { deleteTask } from '../../services/task';
 
 const AddEditDeleteBox = ({
   setTaskList,
@@ -6,23 +7,31 @@ const AddEditDeleteBox = ({
   isFormOpen,
   setShowActions,
   setShowForm,
-  setEdit
+  setEdit,
 }) => {
   const onAdd = () => {
     setShowForm(true);
     setShowActions(false);
   };
 
-  const onDelete = () => {
-    setTaskList((prev) => prev.filter((item) => item.id !== cardId));
-    setShowActions(false);
+  const onDelete = async () => {
+    try {
+      await deleteTask(cardId);
+      setTaskList((prev) => prev.filter(({ task_id }) => task_id !== cardId));
+      setShowActions(false);
+    } catch (err) {
+      setTaskList((prev) => prev);
+      setShowActions(false);
+      console.error(err.message);
+      console.error('There was an error deleting the task! \n', err);
+    }
   };
 
   const onEdit = () => {
     setEdit(true);
     setShowForm(false);
     setShowActions(false);
-  }
+  };
 
   const hideActions = () => setShowActions(false);
 
