@@ -42,6 +42,7 @@ const DashBoardLayout = () => {
         setTaskList={setTaskList}
         setShowForm={setShowForm}
         showForm={showForm}
+        fetchData={fetchData}
       />
     ));
 

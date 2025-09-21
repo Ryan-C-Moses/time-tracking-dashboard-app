@@ -19,18 +19,15 @@ const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
 };
-const morganFormat =
-  productionEnv
-    ? ':remote-addr :method :url :status :res[content-length] - :response-time ms ":user-agent"'
-    : ':method :url :status :res[content-length] - :response-time ms ":user-agent"';
-
-
+const morganFormat = productionEnv
+  ? ':remote-addr :method :url :status :res[content-length] - :response-time ms ":user-agent"'
+  : ':method :url :status :res[content-length] - :response-time ms ":user-agent"';
 
 const taskRateLimiter = rateLimit({
-        windowMs: productionEnv ? 15 * 60 * 1000 : 1 * 60 * 1000, // 15 mins / 1 min
-        max: productionEnv ? 10 : 500, // limit each user to 10 request per minute
-        message: 'Too many requests, please try again later.',
-      });
+  windowMs: productionEnv ? 15 * 60 * 1000 : 1 * 60 * 1000, // 15 mins / 1 min
+  max: productionEnv ? 10 : 500, // limit each user to 10 request per minute
+  message: 'Too many requests, please try again later.',
+});
 
 const initApp = async () => {
   const db = await connectDB();
@@ -270,21 +267,24 @@ const initApp = async () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       const { taskId, entryId } = req.params;
-      const { category, title, duration } = req.body;
+      const { category, title, duration, timeframe } = req.body;
 
       try {
         const result = await db.query(
           `
-        SELECT tasks.id AS task_id,
+        SELECT 
+          tasks.task_uuid AS task_id,
           tasks.title AS title,
           tasks.category AS category,
-          task_entries.id AS entry_id,
+          tasks.timeframe AS timeframe,
+          tasks.previous_time_spent_minutes AS previous,
+          task_entries.task_entry_uuid AS entry_id,
           task_entries.time_spent_minutes AS duration,
-          task_entries.created_at 
+          task_entries.created_at
         FROM
           tasks
         LEFT JOIN task_entries ON tasks.id = task_entries.task_id
-        WHERE tasks.user_id = $1 AND tasks.id = $2 AND task_entries.id = $3
+        WHERE tasks.user_id = $1 AND tasks.task_uuid = $2 AND task_entries.task_entry_uuid = $3
         ORDER BY tasks.id, task_entries.created_at DESC
         `,
           [req.user.id, taskId, entryId]
@@ -302,13 +302,16 @@ const initApp = async () => {
 
         const task = result.rows[0];
 
+        console.log(task);
+
         const newCategory = category || task.category;
         const newTitle = title || task.title;
         const newDuration = duration || task.duration;
+        const newTimeframe = timeframe || task.timeframe;
 
         const shouldUpdateTask =
           (newCategory !== undefined && newCategory !== task.category) ||
-          (title !== undefined && title !== task.title);
+          (title !== undefined && title !== task.title) || (newTimeframe !== undefined && newTimeframe !== task.timeframe);
 
         const shouldUpdateEntry =
           task.entry_id &&
@@ -321,19 +324,21 @@ const initApp = async () => {
 
         if (shouldUpdateTask) {
           await db.query(
-            `UPDATE tasks 
-                      SET title = $1, category = $2
-                      WHERE id = $3 AND (title IS DISTINCT FROM $1 OR
+            `UPDATE 
+              tasks 
+            SET 
+              title = $1, category = $2, timeframe = $3
+            WHERE task_uuid = $4 AND (title IS DISTINCT FROM $1 OR
                       category IS DISTINCT FROM $2)`,
-            [newTitle, newCategory, taskId]
+            [newTitle, newCategory, newTimeframe, taskId]
           );
         }
 
         if (shouldUpdateEntry) {
           await db.query(
             `UPDATE task_entries
-                      SET time_spent_minutes = $1
-                      WHERE id = $2 AND (time_spent_minutes IS DISTINCT FROM $1)`,
+             SET time_spent_minutes = $1
+             WHERE task_entry_uuid = $2 AND (time_spent_minutes IS DISTINCT FROM $1)`,
             [newDuration, task.entry_id]
           );
         }
