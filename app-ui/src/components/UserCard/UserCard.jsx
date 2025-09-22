@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import TimeFrameBtn from '../TimeFrameBtn/TimeFrameBtn.jsx';
 import { timeframes } from '../../utils/constants';
 
-const UserCard = ({ setTimeFrame, username }) => {
+const UserCard = ({ timeFrame, setTimeFrame, username }) => {
   const [activeBtn, setActiveBtn] = useState('');
 
   const toggleBtns = timeframes.map((val, idx) => (
@@ -16,8 +16,8 @@ const UserCard = ({ setTimeFrame, username }) => {
   ));
 
   useEffect(() => {
-    setActiveBtn('daily');
-  }, []);
+    setActiveBtn(timeFrame);
+  }, [timeFrame]);
 
   return (
     <div className='w-full mb-[24px]'>

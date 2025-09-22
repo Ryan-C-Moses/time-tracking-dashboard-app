@@ -8,7 +8,7 @@ import AddEditDeleteBox from '../AddEditDeleteBox/AddEditDeleteBox';
 import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
+const TaskCard = ({ task, setTimeFrame, setTaskList, showForm, setShowForm, fetchTasks }) => {
   const { category, title, duration, previous, timeframe, task_id } = task;
   const [showActions, setShowActions] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -26,6 +26,8 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
   };
 
   const handleChange = (e) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
     setUpdatedValues((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -35,9 +37,11 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
   const handleUpdateTask = async () => {
     setShowActions(false);
     setEdit(false);
+    console.log(updatedValues);
     await updateTask(updatedValues);
     const data = await fetchTasks();
     setTaskList(data);
+    setTimeFrame(updatedValues.timeframe);
   };
 
   const exitForm = () => {

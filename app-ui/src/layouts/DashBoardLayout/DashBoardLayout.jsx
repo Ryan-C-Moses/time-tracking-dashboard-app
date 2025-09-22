@@ -48,6 +48,7 @@ const DashBoardLayout = () => {
         key={task.task_id}
         task={task}
         timeFrame={timeFrame}
+        setTimeFrame={setTimeFrame}
         setTaskList={setTaskList}
         setShowForm={setShowForm}
         showForm={showForm}
@@ -63,7 +64,7 @@ const DashBoardLayout = () => {
         <>
           <SignOutBtn />
           <AddTaskBtn setShowForm={setShowForm} />
-          <UserCard setTimeFrame={setTimeFrame} username={userData.username} />
+          <UserCard timeFrame={timeFrame} setTimeFrame={setTimeFrame} username={userData.username} />
           {showForm && (
             <TaskEntryForm setShowForm={setShowForm} setTimeFrame={setTimeFrame} setTaskList={setTaskList} fetchTasks={fetchTasks} />
           )}

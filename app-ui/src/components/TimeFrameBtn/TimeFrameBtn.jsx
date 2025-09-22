@@ -3,8 +3,6 @@ import clsx from 'clsx';
 const TimeFrameBtn = (props) => {
   const { value, isActive, setActive, setTimeFrame } = props;
 
-  console.log({ value, isActive, setActive, setTimeFrame });
-
   const handleClick = () => {
     setActive(value);
     setTimeFrame(value);

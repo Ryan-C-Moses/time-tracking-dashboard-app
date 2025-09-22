@@ -269,6 +269,8 @@ const initApp = async () => {
       const { taskId, entryId } = req.params;
       const { category, title, duration, timeframe } = req.body;
 
+      console.log('Values from UI: ', { category, title, duration, timeframe });
+
       try {
         const result = await db.query(
           `
@@ -320,6 +322,10 @@ const initApp = async () => {
           newDuration !== 0 &&
           newDuration !== task.duration;
 
+          console.log('Task: ', shouldUpdateTask)
+          console.log('Entry: ', shouldUpdateEntry);
+          console.log('New TimeFrame: ', newTimeframe);
+
         await db.query('BEGIN');
 
         if (shouldUpdateTask) {
@@ -329,7 +335,7 @@ const initApp = async () => {
             SET 
               title = $1, category = $2, timeframe = $3
             WHERE task_uuid = $4 AND (title IS DISTINCT FROM $1 OR
-                      category IS DISTINCT FROM $2)`,
+                      category IS DISTINCT FROM $2 OR timeframe IS DISTINCT FROM $3)`,
             [newTitle, newCategory, newTimeframe, taskId]
           );
         }

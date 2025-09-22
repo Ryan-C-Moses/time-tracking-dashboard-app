@@ -25,7 +25,7 @@ const TaskEntryForm = ({ setShowForm, setTaskList, fetchTasks, setTimeFrame }) =
     setShowForm(false);
     const data = await fetchTasks();
     setTaskList(data);
-    setTimeFrame(formValues.timeframe);
+    setTimeFrame(newTask.timeframe);
   };
 
   const exitForm = () => {
