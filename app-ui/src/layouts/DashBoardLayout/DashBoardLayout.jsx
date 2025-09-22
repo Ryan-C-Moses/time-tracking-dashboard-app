@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { getUser } from '../../services/user';
 import { fetchTasks } from '../../services/task';
+import { redirectToLogin } from '../../utils/constants';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
 import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
@@ -10,22 +12,29 @@ import Loading from '../../components/Loading/Loading';
 
 const DashBoardLayout = () => {
   const [taskList, setTaskList] = useState(null);
-  const [timeFrame, setTimeFrame] = useState('Daily');
+  const [timeFrame, setTimeFrame] = useState('');
   const [showForm, setShowForm] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState({});
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     setIsLoading(true);
-    await fetchUser();
-    const data = await fetchTasks();
-    setTaskList(data);
-    setIsLoading(false);
+    const user = await fetchUser();
+    if (user) {
+      setTimeFrame('Daily');
+      const data = await fetchTasks();
+      setTaskList(data);
+      setIsLoading(false);
+    } else {
+      redirectToLogin(navigate);
+    }
   };
 
   const fetchUser = async () => {
     const user = await getUser();
-    setUser(user);
+    setUserData(user);
+    return user;
   };
 
   useEffect(() => {
@@ -54,12 +63,9 @@ const DashBoardLayout = () => {
         <>
           <SignOutBtn />
           <AddTaskBtn setShowForm={setShowForm} />
-          <UserCard setTimeFrame={setTimeFrame} user={user} />
+          <UserCard setTimeFrame={setTimeFrame} username={userData.username} />
           {showForm && (
-            <TaskEntryForm
-              setShowForm={setShowForm}
-              fetchData={fetchData}
-            />
+            <TaskEntryForm setShowForm={setShowForm} fetchData={fetchData} />
           )}
           {taskList && renderTasks}
         </>

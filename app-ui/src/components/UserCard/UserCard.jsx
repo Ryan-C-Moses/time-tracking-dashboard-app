@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import TimeFrameBtn from '../TimeFrameBtn/TimeFrameBtn.jsx';
 import { timeframes } from '../../utils/constants';
 
-const UserCard = ({ setTimeFrame, user }) => {
-  const [activeBtn, setActiveBtn] = useState('Daily');
+const UserCard = ({ setTimeFrame, username }) => {
+  const [activeBtn, setActiveBtn] = useState('');
 
   const toggleBtns = timeframes.map((val, idx) => (
     <TimeFrameBtn
@@ -15,7 +15,9 @@ const UserCard = ({ setTimeFrame, user }) => {
     />
   ));
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setActiveBtn('Daily');
+  }, []);
 
   return (
     <div className='w-full mb-[24px]'>
@@ -28,7 +30,7 @@ const UserCard = ({ setTimeFrame, user }) => {
           />
           <div className='py-2'>
             <p className='txt-preset-6 rubik-reg mb-2'>Report for</p>
-            <h4 className='w-full txt-preset-4 rubik-light'>{user.username}</h4>
+            <h4 className='w-full txt-preset-4 rubik-light'>{username}</h4>
           </div>
         </div>
         <div className='w-full flex justify-between p-6'>{toggleBtns}</div>
