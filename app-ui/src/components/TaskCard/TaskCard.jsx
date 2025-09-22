@@ -8,7 +8,7 @@ import AddEditDeleteBox from '../AddEditDeleteBox/AddEditDeleteBox';
 import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchData }) => {
+const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
   const { category, title, duration, previous, timeframe, task_id } = task;
   const [showActions, setShowActions] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -36,7 +36,8 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchData }) => {
     setShowActions(false);
     setEdit(false);
     await updateTask(updatedValues);
-    fetchData();
+    const data = await fetchTasks();
+    setTaskList(data);
   };
 
   const exitForm = () => {

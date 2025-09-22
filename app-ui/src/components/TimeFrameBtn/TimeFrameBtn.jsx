@@ -17,7 +17,7 @@ const TimeFrameBtn = (props) => {
       )}
       onClick={handleClick}
     >
-      {value}
+      {value[0].toUpperCase() + value.slice(1)}
     </button>
   );
 };

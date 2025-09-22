@@ -16,7 +16,7 @@ const UserCard = ({ setTimeFrame, username }) => {
   ));
 
   useEffect(() => {
-    setActiveBtn('Daily');
+    setActiveBtn('daily');
   }, []);
 
   return (

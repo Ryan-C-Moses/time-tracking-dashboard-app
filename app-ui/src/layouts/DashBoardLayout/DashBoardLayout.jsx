@@ -22,7 +22,7 @@ const DashBoardLayout = () => {
     setIsLoading(true);
     const user = await fetchUser();
     if (user) {
-      setTimeFrame('Daily');
+      setTimeFrame('daily');
       const data = await fetchTasks();
       setTaskList(data);
       setIsLoading(false);
@@ -42,7 +42,7 @@ const DashBoardLayout = () => {
   }, []);
 
   const renderTasks = taskList
-    ?.filter((task) => task.timeframe === timeFrame.toLocaleLowerCase())
+    ?.filter((task) => task.timeframe === timeFrame)
     .map((task) => (
       <TaskCard
         key={task.task_id}
@@ -51,7 +51,7 @@ const DashBoardLayout = () => {
         setTaskList={setTaskList}
         setShowForm={setShowForm}
         showForm={showForm}
-        fetchData={fetchData}
+        fetchTasks={fetchTasks}
       />
     ));
 
@@ -65,7 +65,7 @@ const DashBoardLayout = () => {
           <AddTaskBtn setShowForm={setShowForm} />
           <UserCard setTimeFrame={setTimeFrame} username={userData.username} />
           {showForm && (
-            <TaskEntryForm setShowForm={setShowForm} fetchData={fetchData} />
+            <TaskEntryForm setShowForm={setShowForm} setTimeFrame={setTimeFrame} setTaskList={setTaskList} fetchTasks={fetchTasks} />
           )}
           {taskList && renderTasks}
         </>

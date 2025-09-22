@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createTask } from '../../services/task';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskEntryForm = ({ setShowForm, fetchData }) => {
+const TaskEntryForm = ({ setShowForm, setTaskList, fetchTasks, setTimeFrame }) => {
   const [formValues, setFormValues] = useState({
     category: 'work',
     title: '',
@@ -21,14 +21,16 @@ const TaskEntryForm = ({ setShowForm, fetchData }) => {
     e.preventDefault();
     const id = uuidv4();
     const newTask = { ...formValues, id };
-    await createTask(newTask)
+    await createTask(newTask);
     setShowForm(false);
-    await fetchData();
+    const data = await fetchTasks();
+    setTaskList(data);
+    setTimeFrame(formValues.timeframe);
   };
 
   const exitForm = () => {
     setShowForm(false);
-  }
+  };
 
   return (
     <div className='rubik-md mt-[30px] mb-[24px] text-(--app-black) relative'>

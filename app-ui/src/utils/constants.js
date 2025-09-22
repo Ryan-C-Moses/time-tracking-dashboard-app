@@ -7,7 +7,7 @@ export const categoryColors = {
   'self-care': 'bg-(--card-soft-yellow)',
 };
 
-export const timeframes = ['Daily', 'Weekly', 'Monthly'];
+export const timeframes = ['daily', 'weekly', 'monthly'];
 
 export const previousLabels = {
   daily: 'Yesterday',
