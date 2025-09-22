@@ -48,7 +48,6 @@ const DashBoardLayout = () => {
         key={task.task_id}
         task={task}
         timeFrame={timeFrame}
-        setTimeFrame={setTimeFrame}
         setTaskList={setTaskList}
         setShowForm={setShowForm}
         showForm={showForm}
