@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { getUser } from '../../services/user';
 import { fetchTasks } from '../../services/task';
 import { redirectToLogin } from '../../utils/constants';
+import { getToken, isTokenExpired } from '../../services/token-store';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
 import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
@@ -21,7 +22,8 @@ const DashBoardLayout = () => {
   const fetchData = async () => {
     setIsLoading(true);
     const user = await fetchUser();
-    if (user) {
+    const token = getToken();
+    if (user && !isTokenExpired(token)) {
       setTimeFrame('daily');
       const data = await fetchTasks();
       setTaskList(data);

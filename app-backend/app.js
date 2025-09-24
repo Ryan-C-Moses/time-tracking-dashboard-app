@@ -261,6 +261,25 @@ const initApp = async () => {
     })(req, res, next);
   });
 
+  app.post(
+    '/api/logs',
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      const { level, message, component, ...meta } = req.body;
+      if (meta) {
+        let data = ""
+        for (const item in meta) {
+          data += `\'${item}: ${meta[item]}\', `;
+        }
+        logger[level](`[FrontEnd]:[${component}] - ${message} - Details: ${data}`);
+      } else {
+        logger[level](`[FrontEnd]:[${component}] - ${message}`);
+      }
+
+      res.sendStatus(200);
+    }
+  );
+
   app.put(
     '/api/tasks/:taskId/entries/:entryId',
     taskRateLimiter,
@@ -286,7 +305,7 @@ const initApp = async () => {
         FROM
           tasks
         LEFT JOIN task_entries ON tasks.id = task_entries.task_id
-        WHERE tasks.user_id = $1 AND tasks.task_uuid = $2 AND task_entries.task_entry_uuid = $3
+        WHERE tasks.user_id = $1 AND tasks.task_uuid = $2::uuid AND task_entries.task_entry_uuid = $3::uuid
         ORDER BY tasks.id, task_entries.created_at DESC
         `,
           [req.user.id, taskId, entryId]
@@ -313,7 +332,8 @@ const initApp = async () => {
 
         const shouldUpdateTask =
           (newCategory !== undefined && newCategory !== task.category) ||
-          (title !== undefined && title !== task.title) || (newTimeframe !== undefined && newTimeframe !== task.timeframe);
+          (title !== undefined && title !== task.title) ||
+          (newTimeframe !== undefined && newTimeframe !== task.timeframe);
 
         const shouldUpdateEntry =
           task.entry_id &&
@@ -322,9 +342,9 @@ const initApp = async () => {
           newDuration !== 0 &&
           newDuration !== task.duration;
 
-          console.log('Task: ', shouldUpdateTask)
-          console.log('Entry: ', shouldUpdateEntry);
-          console.log('New TimeFrame: ', newTimeframe);
+        console.log('Task: ', shouldUpdateTask);
+        console.log('Entry: ', shouldUpdateEntry);
+        console.log('New TimeFrame: ', newTimeframe);
 
         await db.query('BEGIN');
 
