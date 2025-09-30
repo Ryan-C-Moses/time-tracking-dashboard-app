@@ -36,7 +36,6 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
   const handleUpdateTask = async () => {
     setShowActions(false);
     setEdit(false);
-    console.log(updatedValues);
     await updateTask(updatedValues);
     const data = await fetchTasks();
     setTaskList(data);

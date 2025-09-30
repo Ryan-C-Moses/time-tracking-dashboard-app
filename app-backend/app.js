@@ -289,8 +289,6 @@ const initApp = async () => {
       const { taskId, entryId } = req.params;
       const { category, title, duration, timeframe } = req.body;
 
-      console.log('Values from UI: ', { category, title, duration, timeframe });
-
       try {
         const result = await db.query(
           `
@@ -324,8 +322,6 @@ const initApp = async () => {
 
         const task = result.rows[0];
 
-        console.log(task);
-
         const newCategory = category || task.category;
         const newTitle = title || task.title;
         const newDuration = duration || task.duration;
@@ -342,10 +338,6 @@ const initApp = async () => {
           newDuration !== null &&
           newDuration !== 0 &&
           newDuration !== task.duration;
-
-        console.log('Task: ', shouldUpdateTask);
-        console.log('Entry: ', shouldUpdateEntry);
-        console.log('New TimeFrame: ', newTimeframe);
 
         await db.query('BEGIN');
 
