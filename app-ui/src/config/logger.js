@@ -1,19 +1,23 @@
-import { createLogger, format, transports } from 'winston/browser';
+import { getToken } from '../services/token-store';
 
-const logger = createLogger({
-  level: 'info',
-  format: format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.printf(
-      ({ timestamp, level, message }) => `${timestamp} [${level}]: ${message}`
-    )
-  ),
-  transports: [new transports.Console()],
-});
+const baseLogger = (level, msg, component, ctx = null) => {
+  const evt = { level, msg, component, tsFromFE: Date.now(), ...ctx};
 
-// Example
-logger.info('Frontend logger initialized');
-logger.warn('API response took too long');
-logger.error('Something broke on the client side');
+  const headers = { 'Content-Type': 'application/json' };
+  if (getToken()) headers['Authorization'] = `Bearer ${getToken()}`;
 
-export default logger;
+  fetch('/api/logs', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(evt),
+  });
+};
+
+const log = {
+  info: (m, c, ctx) => baseLogger('info', m, c, ctx),
+  warn: (m, c, ctx) => baseLogger('warn', m, c, ctx),
+  error: (m, c, ctx) => baseLogger('error', m, c, ctx),
+  http: (m, c, ctx) => baseLogger('http', m, c, ctx),
+};
+
+export default log;

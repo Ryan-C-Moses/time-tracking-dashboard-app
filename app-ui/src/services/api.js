@@ -1,4 +1,5 @@
 import * as TokenService from './token-store';
+import log from '../config/logger';
 
 export const request = async (
   path,
@@ -17,6 +18,6 @@ export const request = async (
 
     return data;
   } catch (err) {
-    console.error(err.message);
+    log.error(err.message, 'Request Utility Func', err);
   }
 };

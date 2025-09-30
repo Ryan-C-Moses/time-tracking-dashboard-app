@@ -4,6 +4,7 @@ import { getUser } from '../../services/user';
 import { fetchTasks } from '../../services/task';
 import { redirectToLogin } from '../../utils/constants';
 import { getToken, isTokenExpired } from '../../services/token-store';
+import log from '../../config/logger';
 import TaskCard from '../../components/TaskCard/TaskCard';
 import UserCard from '../../components/UserCard/UserCard';
 import TaskEntryForm from '../../components/TaskEntryForm/TaskEntryForm';
@@ -40,6 +41,7 @@ const DashBoardLayout = () => {
   };
 
   useEffect(() => {
+    log.warn('Loading Data', '<DashBoardLayout />');
     fetchData();
   }, []);
 
@@ -65,9 +67,18 @@ const DashBoardLayout = () => {
         <>
           <SignOutBtn />
           <AddTaskBtn setShowForm={setShowForm} />
-          <UserCard timeFrame={timeFrame} setTimeFrame={setTimeFrame} username={userData.username} />
+          <UserCard
+            timeFrame={timeFrame}
+            setTimeFrame={setTimeFrame}
+            username={userData.username}
+          />
           {showForm && (
-            <TaskEntryForm setShowForm={setShowForm} setTimeFrame={setTimeFrame} setTaskList={setTaskList} fetchTasks={fetchTasks} />
+            <TaskEntryForm
+              setShowForm={setShowForm}
+              setTimeFrame={setTimeFrame}
+              setTaskList={setTaskList}
+              fetchTasks={fetchTasks}
+            />
           )}
           {taskList && renderTasks}
         </>

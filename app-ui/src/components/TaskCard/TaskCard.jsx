@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import clsx from 'clsx';
 import { categoryColors } from '../../utils/constants';
 import { getImageUrl } from '../../utils/image-utils';
 import { previousLabels } from '../../utils/constants';
 import { updateTask } from '../../services/task';
+import clsx from 'clsx';
+import log from '../../config/logger';
 import AddEditDeleteBox from '../AddEditDeleteBox/AddEditDeleteBox';
 import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
@@ -18,7 +19,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
     duration,
     timeframe,
     task_id,
-    entry_id: task.entry_id
+    entry_id: task.entry_id,
   });
 
   const handleClick = () => {
@@ -26,8 +27,6 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
     setUpdatedValues((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -41,6 +40,9 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
     await updateTask(updatedValues);
     const data = await fetchTasks();
     setTaskList(data);
+    log.info(`Task ${updatedValues.task_id} updated`, '<TaskCard />', {
+      action: 'edited task',
+    });
   };
 
   const exitForm = () => {
@@ -51,7 +53,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
       category,
       duration,
       timeframe,
-      task_id
+      task_id,
     });
   };
 

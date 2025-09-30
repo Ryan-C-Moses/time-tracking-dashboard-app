@@ -19,8 +19,6 @@ export const login = async ({ email, password }) => {
     auth: true,
   });
 
-  console.log(data);
-
   const { user, token } = data;
   TokenService.setToken(token);
   return user;

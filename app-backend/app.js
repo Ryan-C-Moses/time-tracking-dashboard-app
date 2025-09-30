@@ -61,7 +61,7 @@ const initApp = async () => {
         const user = result.rows[0];
 
         if (!user) return cb(null, false, { message: 'User not found' });
-        logger.info(`[auth] User ${jwt_payload.id} authenticated successfully`);
+        logger.info(`[auth] User ${user.user_uuid} authenticated successfully`);
         return cb(null, user);
       } catch (err) {
         logger.error('Auth error:', err);
@@ -93,7 +93,9 @@ const initApp = async () => {
             return cb(null, false, { message: 'Incorrect password' });
           }
 
-          logger.info(`[auth] User ${user.id} authenticated successfully`);
+          logger.info(
+            `[auth] User ${user.user_uuid} authenticated successfully`
+          );
           return cb(null, user);
         } catch (err) {
           logger.error(err);
@@ -128,7 +130,7 @@ const initApp = async () => {
           [req.user.id]
         );
 
-        logger.info(`User ${req.user.id} requested all tasks`);
+        logger.info(`User ${req.user.user_uuid} requested all tasks`);
         res.status(200).json(result.rows);
       } catch (err) {
         logger.error(err);
@@ -170,7 +172,7 @@ const initApp = async () => {
 
         await db.query('COMMIT');
 
-        logger.info(`User ${req.user.id} created task "${title}"`);
+        logger.info(`User ${req.user.user_uuid} created task "${title}"`);
         res.status(200).send({ message: 'Task added successfully!' });
       } catch (err) {
         await db.query('ROLLBACK');
@@ -201,7 +203,6 @@ const initApp = async () => {
       );
 
       const [user] = result.rows;
-      console.log(user);
       const username = `${user.first_name} ${user.last_name}`;
 
       const payload = { id: user.id, email: user.email };
@@ -210,7 +211,7 @@ const initApp = async () => {
         expiresIn: '1h',
       });
 
-      logger.info(`User ${user.id} registered}`);
+      logger.info(`User ${user.user_uuid} registered}`);
       res.status(201).json({
         message: 'User registered successfully',
         user: {
@@ -248,7 +249,7 @@ const initApp = async () => {
         expiresIn: '1h',
       });
 
-      logger.info(`User ${user.id} logged in`);
+      logger.info(`User ${user.user_uuid} logged in`);
       res.status(200).json({
         message: 'OK',
         user: {
@@ -265,15 +266,15 @@ const initApp = async () => {
     '/api/logs',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
-      const { level, message, component, ...meta } = req.body;
-      if (meta) {
-        let data = ""
+      const { level, msg, component, ...meta } = req.body;
+      if (Object.keys(meta).length > 0) {
+        let data = '';
         for (const item in meta) {
           data += `\'${item}: ${meta[item]}\', `;
         }
-        logger[level](`[FrontEnd]:[${component}] - ${message} - Details: ${data}`);
+        logger[level](`[FrontEnd]:[${component}] - ${msg} - Details: ${data}`);
       } else {
-        logger[level](`[FrontEnd]:[${component}] - ${message}`);
+        logger[level](`[FrontEnd]:[${component}] - ${msg}`);
       }
 
       res.sendStatus(200);
@@ -371,7 +372,7 @@ const initApp = async () => {
 
         await db.query('COMMIT');
 
-        logger.info(`User ${req.user.id} Updated task ${newTitle}`);
+        logger.info(`User ${req.user.user_uuid} Updated task ${newTitle}`);
         res.status(200).send({ message: 'Task Updated Successfully!' });
       } catch (err) {
         logger.error(err);
@@ -398,7 +399,7 @@ const initApp = async () => {
 
         const task = result.rows[0];
 
-        logger.info(`User ${req.user.id} Deleted task ${task.title}`);
+        logger.info(`User ${req.user.user_uuid} Deleted task ${task.title}`);
         res.status(200).send({
           status: '200 OK',
           message: 'Task Deleted!',

@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { createTask } from '../../services/task';
+import log from '../../config/logger';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskEntryForm = ({ setShowForm, setTaskList, fetchTasks, setTimeFrame }) => {
+const TaskEntryForm = ({
+  setShowForm,
+  setTaskList,
+  fetchTasks,
+  setTimeFrame,
+}) => {
   const [formValues, setFormValues] = useState({
     category: 'work',
     title: '',
@@ -23,6 +29,9 @@ const TaskEntryForm = ({ setShowForm, setTaskList, fetchTasks, setTimeFrame }) =
     const newTask = { ...formValues, id };
     await createTask(newTask);
     setShowForm(false);
+    log.warn('Re-Fetching All Tasks', '<TaskEntryForm />', {
+      action: 'Submitted form for new task entry',
+    });
     const data = await fetchTasks();
     setTaskList(data);
     setTimeFrame(newTask.timeframe);

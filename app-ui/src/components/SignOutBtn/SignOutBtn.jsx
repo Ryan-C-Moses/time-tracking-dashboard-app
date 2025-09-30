@@ -1,10 +1,15 @@
 import { useNavigate } from 'react-router';
 import { logout } from '../../services/auth';
+import { getUser } from '../../services/user';
+import log from '../../config/logger';
 
 const SignOutBtn = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    const user = getUser();
+    const msg = `User ${user.id} has successfully logged out the application`;
+    log.info(msg, '<SignOutBtn />')
     logout(navigate);
   };
 

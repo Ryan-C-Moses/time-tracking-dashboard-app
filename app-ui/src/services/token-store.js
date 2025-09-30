@@ -14,8 +14,7 @@ export const isTokenExpired = (token) => {
     const result = Date.now() >= exp * 1000;
     if (result) clearToken();
     return result;
-  } catch (err) {
-    console.log(err);
+  } catch {
     return true; // if invalid
   }
 };
