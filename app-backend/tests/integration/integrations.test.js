@@ -30,6 +30,9 @@ describe('Auth Routes', () => {
       lName: 'Robson',
     });
 
+    console.log(res.body);
+    console.log(res.statusCode);
+
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('user');
     expect(res.body).toHaveProperty('token');
