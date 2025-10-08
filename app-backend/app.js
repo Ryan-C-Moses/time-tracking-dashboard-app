@@ -5,7 +5,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import logger from './config/logger.js';
+import { logger, logLevels } from './config/logger.js';
 import morgan from 'morgan';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -257,14 +257,25 @@ const initApp = async () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       const { level, msg, component, ...meta } = req.body;
+      let logMethod = null;
+
+      if (level in logLevels) {
+        logMethod = logger[level];
+      } else {
+        logger.warn(
+          `[FrontEnd]: Invalid logger level '${level}' used. Defaulting to 'warn'.`
+        );
+        logMethod = logger['warn'];
+      }
+
       if (Object.keys(meta).length > 0) {
         let data = '';
         for (const item in meta) {
           data += `\'${item}: ${meta[item]}\', `;
         }
-        logger[level](`[FrontEnd]:[${component}] - ${msg} | Details: ${data}`);
+        logMethod(`[FrontEnd]:[${component}] - ${msg} | Details: ${data}`);
       } else {
-        logger[level](`[FrontEnd]:[${component}] - ${msg}`);
+        logMethod(`[FrontEnd]:[${component}] - ${msg}`);
       }
 
       res.sendStatus(200);
