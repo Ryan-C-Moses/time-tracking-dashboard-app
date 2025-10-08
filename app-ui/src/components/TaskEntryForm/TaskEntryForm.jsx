@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { createTask } from '../../services/task';
 import log from '../../config/logger';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
@@ -25,8 +24,7 @@ const TaskEntryForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const id = uuidv4();
-    const newTask = { ...formValues, id };
+    const newTask = { ...formValues };
     await createTask(newTask);
     setShowForm(false);
     log.warn('Re-Fetching All Tasks', '<TaskEntryForm />', {

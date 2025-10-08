@@ -114,19 +114,16 @@ const initApp = async () => {
         const result = await db.query(
           `SELECT
             tasks.task_uuid AS task_id,
-            tasks.title AS title,
-            tasks.category AS category,
-            tasks.timeframe AS timeframe,
-            tasks.previous_time_spent_minutes AS previous,
-            task_entries.task_entry_uuid AS entry_id,
-            task_entries.time_spent_minutes AS duration,
-            task_entries.created_at
+            tasks.title,
+            tasks.category,
+            tasks.timeframe,
+            tasks.previous_duration,
+            tasks.duration,
+            tasks.created_at
           FROM
-            tasks
-          LEFT JOIN
-            task_entries ON task_entries.task_id = tasks.id
-          WHERE tasks.user_id = $1
-          ORDER BY tasks.id, task_entries.created_at DESC`,
+	          tasks
+          WHERE user_id = $1
+          ORDER BY tasks.id, tasks.created_at DESC`,
           [req.user.id]
         );
 
@@ -155,28 +152,19 @@ const initApp = async () => {
     taskRateLimiter,
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
-      const { id, category, title, duration, timeframe } = req.body;
+      const { category, title, duration, timeframe } = req.body;
       try {
-        await db.query('BEGIN');
         const result = await db.query(
-          'INSERT INTO tasks (user_id, title, category, timeframe) VALUES ($1, $2, $3, $4) RETURNING id',
-          [req.user.id, title, category, timeframe]
+          'INSERT INTO tasks (user_id, title, category, duration, timeframe) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+          [req.user.id, title, category, duration, timeframe]
         );
 
-        const { id: taskId } = result.rows[0];
+        const task = result.rows[0];
 
-        await db.query(
-          'INSERT INTO task_entries (task_id, task_entry_uuid, time_spent_minutes) VALUES ($1, $2, $3)',
-          [taskId, id, duration]
-        );
-
-        await db.query('COMMIT');
-
-        logger.info(`User ${req.user.user_uuid} created task "${title}"`);
+        logger.info(`User ${req.user.user_uuid} created task "${task.title}" - task_id: ${task.task_uuid}`);
         res.status(200).send({ message: 'Task added successfully!' });
       } catch (err) {
-        await db.query('ROLLBACK');
-        logger.error('Transaction failed:', err);
+        logger.error('Post failed:', err);
         res.status(500).send('Internal Server Error');
       }
     }

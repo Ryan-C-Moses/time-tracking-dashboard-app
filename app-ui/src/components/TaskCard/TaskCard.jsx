@@ -10,7 +10,7 @@ import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
 const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
-  const { category, title, duration, previous, timeframe, task_id } = task;
+  const { category, title, duration, previous_duration, timeframe, task_id } = task;
   const [showActions, setShowActions] = useState(false);
   const [edit, setEdit] = useState(false);
   const [updatedValues, setUpdatedValues] = useState({
@@ -191,8 +191,8 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
               isPulse
             )}
           >
-            {previousLabels[timeframe]} - {previous}
-            {previous === 1 ? 'hr' : 'hrs'}
+            {previousLabels[timeframe]} - {previous_duration}
+            {previous_duration === 1 ? 'hr' : 'hrs'}
           </p>
         )}
         {edit && <SaveBtn handleUpdateTask={handleUpdateTask} />}
