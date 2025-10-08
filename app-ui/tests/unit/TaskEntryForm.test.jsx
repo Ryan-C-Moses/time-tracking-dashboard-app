@@ -2,12 +2,35 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
+vi.mock('../../src/config/logger.js', () => ({
+  __esModule: true,
+  default: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    http: vi.fn(),
+  },
+}));
 import TaskEntryForm from '../../src/components/TaskEntryForm/TaskEntryForm';
 import DashBoardLayout from '../../src/layouts/DashBoardLayout/DashBoardLayout';
 
 describe('TaskEntryForm Test', () => {
+  const setShowForm = vi.fn();
+  const setTaskList = vi.fn();
+  const fetchTasks = vi.fn();
+  const setTimeFrame = vi.fn();
+
+  const setup = () => {
+    return render(<TaskEntryForm 
+      setShowForm={setShowForm}
+      setTaskList={setTaskList}
+      fetchTasks={fetchTasks}
+      setTimeFrame={setTimeFrame}
+    />);
+  }
+
   it('render inputs and labels', () => {
-    render(<TaskEntryForm />);
+    setup();
 
     const title = screen.getByLabelText('Title');
     const duration = screen.getByLabelText('Duration');
@@ -28,7 +51,7 @@ describe('TaskEntryForm Test', () => {
   });
 
   it('submit button rendered', () => {
-    render(<TaskEntryForm />);
+    setup()
 
     const button = screen.getByText('Add Entry');
 
@@ -36,10 +59,7 @@ describe('TaskEntryForm Test', () => {
   });
 
   it('form values return to default', async () => {
-    const setShowForm = vi.fn();
-    const setTaskList = vi.fn();
-
-    render(<TaskEntryForm setShowForm={setShowForm} setTaskList={setTaskList} />);
+    setup();
 
     const button = screen.getByText('Add Entry');
     const title = screen.getByLabelText('Title');

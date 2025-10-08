@@ -11,7 +11,7 @@ describe('renders text', () => {
   });
 
   it('renders username', () => {
-    render(<UserCard />);
+    render(<UserCard username={'Jeremy Robson'} />);
     const text = screen.getByText('Jeremy Robson');
     expect(text).toBeInTheDocument();
   });
@@ -19,10 +19,10 @@ describe('renders text', () => {
   it('renders timeframe buttons', () => {
     const setTimeFrame = vi.fn();
 
-    render(<UserCard setTimeFrame={setTimeFrame}/>)
+    render(<UserCard setTimeFrame={setTimeFrame} />);
 
     const buttons = screen.getAllByRole('button');
-    
+
     expect(buttons[0]).toHaveTextContent('Daily');
     expect(buttons[1]).toHaveTextContent('Weekly');
     expect(buttons[2]).toHaveTextContent('Monthly');
