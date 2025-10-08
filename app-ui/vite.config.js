@@ -18,14 +18,9 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    test: {
-      environment: 'jsdom',
-      globals: true,
-    },
   },
-  resolve: {
-    alias: {
-      winston: 'winston/browser',
-    },
+  test: {
+    environment: 'jsdom',
+    globals: true,
   },
 });
