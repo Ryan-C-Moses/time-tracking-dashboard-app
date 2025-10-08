@@ -19,7 +19,6 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
     duration,
     timeframe,
     task_id,
-    entry_id: task.entry_id,
   });
 
   const handleClick = () => {

@@ -19,10 +19,10 @@ export const createTask = async (body) => {
 };
 
 export const updateTask = async (body) => {
-  const { task_id, entry_id } = body;
+  const { task_id } = body;
 
   try {
-    await request(`/api/tasks/${task_id}/entries/${entry_id}`, {
+    await request(`/api/tasks/${task_id}`, {
       method: 'PUT',
       body,
       auth: true,

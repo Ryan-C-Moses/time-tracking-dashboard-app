@@ -161,7 +161,9 @@ const initApp = async () => {
 
         const task = result.rows[0];
 
-        logger.info(`User ${req.user.user_uuid} created task "${task.title}" - task_id: ${task.task_uuid}`);
+        logger.info(
+          `User ${req.user.user_uuid} created task "${task.title}" - task_id: ${task.task_uuid}`
+        );
         res.status(200).send({ message: 'Task added successfully!' });
       } catch (err) {
         logger.error('Post failed:', err);
@@ -260,7 +262,7 @@ const initApp = async () => {
         for (const item in meta) {
           data += `\'${item}: ${meta[item]}\', `;
         }
-        logger[level](`[FrontEnd]:[${component}] - ${msg} - Details: ${data}`);
+        logger[level](`[FrontEnd]:[${component}] - ${msg} | Details: ${data}`);
       } else {
         logger[level](`[FrontEnd]:[${component}] - ${msg}`);
       }
@@ -270,93 +272,47 @@ const initApp = async () => {
   );
 
   app.put(
-    '/api/tasks/:taskId/entries/:entryId',
+    '/api/tasks/:taskId',
     taskRateLimiter,
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
-      const { taskId, entryId } = req.params;
+      const { taskId } = req.params;
       const { category, title, duration, timeframe } = req.body;
 
       try {
-        const result = await db.query(
-          `
-        SELECT 
-          tasks.task_uuid AS task_id,
-          tasks.title AS title,
-          tasks.category AS category,
-          tasks.timeframe AS timeframe,
-          tasks.previous_time_spent_minutes AS previous,
-          task_entries.task_entry_uuid AS entry_id,
-          task_entries.time_spent_minutes AS duration,
-          task_entries.created_at
-        FROM
-          tasks
-        LEFT JOIN task_entries ON tasks.id = task_entries.task_id
-        WHERE tasks.user_id = $1 AND tasks.task_uuid = $2::uuid AND task_entries.task_entry_uuid = $3::uuid
-        ORDER BY tasks.id, task_entries.created_at DESC
-        `,
-          [req.user.id, taskId, entryId]
+        const upd = await db.query(
+          `UPDATE 
+              tasks 
+            SET 
+              title = $1, category = $2, timeframe = $3, duration = $4
+            WHERE task_uuid = $5 AND (title IS DISTINCT FROM $1 OR
+                      category IS DISTINCT FROM $2 OR timeframe IS DISTINCT FROM $3 OR duration IS DISTINCT FROM $4)
+            RETURNING title, task_uuid`,
+          [title, category, timeframe, duration, taskId]
         );
 
-        if (result.rowCount !== 1) {
-          throw new Error('Expected exactly one matching task-entry pair.');
-        }
+        if (upd.rowCount === 0) {
+          const exists = await db.query(
+            `SELECT 1 FROM tasks WHERE user_id = $1 AND task_uuid = $2::uuid`,
+            [req.user.id, taskId]
+          );
 
-        if (result.rows.length === 0) {
+          if (exists.rowCount !== 1) {
+            throw new Error('Expected exactly one matching task.');
+          }
+
           return res
             .status(404)
             .json({ message: 'Task not found or not authorized.' });
         }
 
-        const task = result.rows[0];
-
-        const newCategory = category || task.category;
-        const newTitle = title || task.title;
-        const newDuration = duration || task.duration;
-        const newTimeframe = timeframe || task.timeframe;
-
-        const shouldUpdateTask =
-          (newCategory !== undefined && newCategory !== task.category) ||
-          (title !== undefined && title !== task.title) ||
-          (newTimeframe !== undefined && newTimeframe !== task.timeframe);
-
-        const shouldUpdateEntry =
-          task.entry_id &&
-          newDuration !== undefined &&
-          newDuration !== null &&
-          newDuration !== 0 &&
-          newDuration !== task.duration;
-
-        await db.query('BEGIN');
-
-        if (shouldUpdateTask) {
-          await db.query(
-            `UPDATE 
-              tasks 
-            SET 
-              title = $1, category = $2, timeframe = $3
-            WHERE task_uuid = $4 AND (title IS DISTINCT FROM $1 OR
-                      category IS DISTINCT FROM $2 OR timeframe IS DISTINCT FROM $3)`,
-            [newTitle, newCategory, newTimeframe, taskId]
-          );
-        }
-
-        if (shouldUpdateEntry) {
-          await db.query(
-            `UPDATE task_entries
-             SET time_spent_minutes = $1
-             WHERE task_entry_uuid = $2 AND (time_spent_minutes IS DISTINCT FROM $1)`,
-            [newDuration, task.entry_id]
-          );
-        }
-
-        await db.query('COMMIT');
-
-        logger.info(`User ${req.user.user_uuid} Updated task ${newTitle}`);
+        const updTask = upd.rows[0];
+        logger.info(
+          `User ${req.user.user_uuid} Updated task "${updTask.title}" - task_id: ${updTask.task_uuid}`
+        );
         res.status(200).send({ message: 'Task Updated Successfully!' });
       } catch (err) {
         logger.error(err);
-        await db.query('ROLLBACK');
         res.status(500).send({ message: 'Internal Server Error' });
       }
     }
