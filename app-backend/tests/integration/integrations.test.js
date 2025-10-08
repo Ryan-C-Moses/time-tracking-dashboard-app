@@ -26,8 +26,8 @@ describe('Auth Routes', () => {
     const res = await request(app).post('/api/auth/register').send({
       email: 'jeremy_robson@fake.com',
       password: 'jeremy_pswd',
-      firstName: 'Jeremy',
-      lastName: 'Robson',
+      fName: 'Jeremy',
+      lName: 'Robson',
     });
 
     expect(res.statusCode).toBe(201);
@@ -38,7 +38,7 @@ describe('Auth Routes', () => {
   it('should login an existing user', async () => {
     const res = await request(app).post('/api/auth/login').send({
       email: 'jeremy_robson@fake.com',
-      loginPassword: 'jeremy_pswd',
+      password: 'jeremy_pswd',
     });
 
     expect(res.statusCode).toBe(200);
@@ -62,9 +62,10 @@ describe('Task Routes', () => {
       .post('/api/tasks')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        category: 'Daily',
+        timeframe: 'daily',
         title: 'Write tests',
-        duration: 30,
+        duration: 3,
+        category: 'work'
       });
 
     expect(res.statusCode).toBe(200);
