@@ -18,14 +18,39 @@ CREATE TABLE tasks (
   title TEXT NOT NULL,
   timeframe TEXT NOT NULL CHECK (timeframe IN ('daily', 'weekly', 'monthly')),
   category TEXT NOT NULL CHECK (category IN ('work', 'play', 'study', 'exercise', 'social', 'self-care')),
-  previous_time_spent_minutes INTEGER DEFAULT NULL
-);
-
--- Task entries table
-CREATE TABLE task_entries (
-  id SERIAL PRIMARY KEY,
-  task_entry_uuid UUID DEFAULT gen_random_uuid() UNIQUE, -- public id for API
-  task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
-  time_spent_minutes INTEGER NOT NULL,
+  previous_duration INTEGER DEFAULT NULL,
+  duration INTEGER NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Tasks archive table
+CREATE TABLE tasks_archive (LIKE tasks INCLUDING ALL);
+ALTER TABLE tasks_archive
+  ADD COLUMN deleted_at TIMESTAMP NOT NULL DEFAULT now();
+
+-- Create Trigger Function
+CREATE OR REPLACE FUNCTION archive_tasks_before_delete()
+RETURNS trigger
+LANGUAGE plpgsql as $$
+BEGIN
+  INSERT INTO tasks_archive
+  SELECT OLD.*, now();
+  RETURN OLD;
+END;
+$$;
+
+-- ATTACH Trigger Function to table
+CREATE TRIGGER trg_tasks_archive_before_delete
+BEFORE DELETE ON tasks
+FOR EACH ROW
+EXECUTE FUNCTION archive_tasks_before_delete();
+
+
+-- Task entries table - OUTDATED 
+-- CREATE TABLE task_entries (
+--   id SERIAL PRIMARY KEY,
+--   task_entry_uuid UUID DEFAULT gen_random_uuid() UNIQUE, -- public id for API
+--   task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+--   time_spent_minutes INTEGER NOT NULL,
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
