@@ -34,12 +34,12 @@ const readSQLFiles = () => {
     "utf8"
   );
   const insertUsersSQL = fs.readFileSync("./queries/insert_users.sql", "utf8");
-  const insertTaskAndEntries = fs.readFileSync(
-    "./queries/seed_task_and_entries.sql",
+  const insertTaskSQL = fs.readFileSync(
+    "./queries/insert_tasks.sql",
     "utf8"
   );
 
-  return [createTableSQL, insertUsersSQL, insertTaskAndEntries];
+  return [createTableSQL, insertUsersSQL, insertTaskSQL];
 };
 
 const handleDBQueries = async (db, [sql1, sql2, sql3]) => {
@@ -51,7 +51,7 @@ const handleDBQueries = async (db, [sql1, sql2, sql3]) => {
   logger.info("Insert Users...");
   await db.query(sql2);
 
-  logger.info("Insert Task and Entries");
+  logger.info("Insert Task");
   await db.query(sql3);
 
   await db.query("COMMIT");
