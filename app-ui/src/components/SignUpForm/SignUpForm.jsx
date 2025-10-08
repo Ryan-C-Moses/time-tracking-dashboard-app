@@ -18,9 +18,9 @@ const SignUpForm = () => {
   const handleMouseOut = () => setIsPulse(false);
   const handleChange = (e) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(fields);
+    await register(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
     redirectToHome(navigate);
   };
