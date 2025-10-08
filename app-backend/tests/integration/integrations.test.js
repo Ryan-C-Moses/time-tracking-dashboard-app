@@ -26,12 +26,9 @@ describe('Auth Routes', () => {
     const res = await request(app).post('/api/auth/register').send({
       email: 'jeremy_robson@fake.com',
       password: 'jeremy_pswd',
-      fName: 'Jeremy',
-      lName: 'Robson',
+      fname: 'Jeremy',
+      lname: 'Robson',
     });
-
-    console.log(res.body);
-    console.log(res.statusCode);
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('user');
