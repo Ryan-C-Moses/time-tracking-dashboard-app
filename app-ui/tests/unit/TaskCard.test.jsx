@@ -7,14 +7,23 @@ import { categoryColors } from '../../src/utils/constants';
 import * as imageUtils from '../../src/utils/image-utils';
 
 describe('TaskCard Unit Test', () => {
+  vi.mock('../../src/config/logger', () => ({
+    logger: {
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      http: vi.fn(),
+    },
+  }));
+
   it('component renders with correct values', () => {
     const task = {
       category: 'work',
       title: 'Working Dev Stuff',
       duration: 5,
-      previous: 10,
+      previous_duration: 10,
       timeframe: 'daily',
-      id: 1,
+      task_id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -45,9 +54,9 @@ describe('TaskCard Unit Test', () => {
       category: 'work',
       title: 'Working Dev Stuff',
       duration: 1,
-      previous: 2,
+      previous_duration: 2,
       timeframe: 'daily',
-      id: 1,
+      task_id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -72,9 +81,9 @@ describe('TaskCard Unit Test', () => {
       category: 'work',
       title: 'Working Dev Stuff',
       duration: 1,
-      previous: 2,
+      previous_duration: 2,
       timeframe: 'daily',
-      id: 1,
+      task_id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;
@@ -99,9 +108,9 @@ describe('TaskCard Unit Test', () => {
       category: 'work',
       title: 'Working Dev Stuff',
       duration: 1,
-      previous: 2,
+      previous_duration: 2,
       timeframe: 'daily',
-      id: 1,
+      task_id: 1,
     };
     vi.spyOn(imageUtils, 'getImageUrl').mockReturnValue(
       `icon-${task.category}.svg`
@@ -132,9 +141,9 @@ describe('TaskCard Unit Test', () => {
       category: 'work',
       title: 'Working Dev Stuff',
       duration: 1,
-      previous: 2,
+      previous_duration: 2,
       timeframe: 'daily',
-      id: 1,
+      task_id: 1,
     };
     const setTaskList = vi.fn();
     const showForm = false;

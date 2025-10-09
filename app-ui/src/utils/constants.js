@@ -1,5 +1,3 @@
-
-
 export const categoryColors = {
   work: 'bg-(--card-light-orange)',
   play: 'bg-(--card-soft-blue)',
@@ -9,7 +7,7 @@ export const categoryColors = {
   'self-care': 'bg-(--card-soft-yellow)',
 };
 
-export const timeframes = ['Daily', 'Weekly', 'Monthly'];
+export const timeframes = ['daily', 'weekly', 'monthly'];
 
 export const previousLabels = {
   daily: 'Yesterday',
@@ -18,5 +16,9 @@ export const previousLabels = {
 };
 
 export const redirectToHome = (navigate) => {
-  navigate('/home');  
-}
+  navigate('/home');
+};
+
+export const redirectToLogin = (navigate) => {
+  navigate('/');
+};

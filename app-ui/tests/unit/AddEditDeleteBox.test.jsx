@@ -2,6 +2,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
+vi.mock('../../src/config/logger.js', () => ({
+  __esModule: true,
+  default: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    http: vi.fn(),
+  },
+}));
 import AddEditDeleteBox from '../../src/components/AddEditDeleteBox/AddEditDeleteBox';
 
 describe('addEditDeleteBox unit test', () => {
@@ -115,9 +124,9 @@ describe('addEditDeleteBox unit test', () => {
     expect(setTaskList).toHaveBeenCalledWith(expect.any(Function));
 
     const updater = setTaskList.mock.calls[0][0];
-    const prevList = [{ id: 1 }, { id: 2 }];
+    const prevList = [{ task_id: 1 }, { task_id: 2 }];
     const result = updater(prevList);
-    expect(result).toEqual([{ id: 2 }]);
+    expect(result[0].task_id).toEqual(2);
   });
 
   it('clicking Delete calls setShowActions(false)', async () => {

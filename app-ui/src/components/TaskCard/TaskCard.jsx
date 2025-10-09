@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import clsx from 'clsx';
 import { categoryColors } from '../../utils/constants';
 import { getImageUrl } from '../../utils/image-utils';
 import { previousLabels } from '../../utils/constants';
+import { updateTask } from '../../services/task';
+import clsx from 'clsx';
+import log from '../../config/logger';
 import AddEditDeleteBox from '../AddEditDeleteBox/AddEditDeleteBox';
 import SaveBtn from '../SaveBtn/SaveBtn';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
-  const { category, title, duration, previous, timeframe, id } = task;
+const TaskCard = ({ task, setTaskList, showForm, setShowForm, fetchTasks }) => {
+  const { category, title, duration, previous_duration, timeframe, task_id } = task;
   const [showActions, setShowActions] = useState(false);
   const [edit, setEdit] = useState(false);
   const [updatedValues, setUpdatedValues] = useState({
@@ -16,6 +18,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
     category,
     duration,
     timeframe,
+    task_id,
   });
 
   const handleClick = () => {
@@ -29,10 +32,15 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
     }));
   };
 
-  const updateTask = () => {
+  const handleUpdateTask = async () => {
     setShowActions(false);
     setEdit(false);
-    console.log(updatedValues);
+    await updateTask(updatedValues);
+    const data = await fetchTasks();
+    setTaskList(data);
+    log.info(`Task ${updatedValues.task_id} updated`, '<TaskCard />', {
+      action: 'edited task',
+    });
   };
 
   const exitForm = () => {
@@ -43,6 +51,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
       category,
       duration,
       timeframe,
+      task_id,
     });
   };
 
@@ -119,7 +128,7 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
           {showActions ? (
             <AddEditDeleteBox
               setTaskList={setTaskList}
-              cardId={id}
+              cardId={task_id}
               setShowActions={setShowActions}
               setShowForm={setShowForm}
               isFormOpen={showForm}
@@ -181,11 +190,11 @@ const TaskCard = ({ task, setTaskList, showForm, setShowForm }) => {
               isPulse
             )}
           >
-            {previousLabels[timeframe]} - {previous}
-            {previous === 1 ? 'hr' : 'hrs'}
+            {previousLabels[timeframe]} - {previous_duration}
+            {previous_duration === 1 ? 'hr' : 'hrs'}
           </p>
         )}
-        {edit && <SaveBtn updateTask={updateTask} />}
+        {edit && <SaveBtn handleUpdateTask={handleUpdateTask} />}
       </div>
     </div>
   );

@@ -3,6 +3,9 @@ name: time-tracking-dashboard
 networks:
   time-tracking-dashboard-network:
 
+volumes:
+  app_ui_node_modules: {}
+
 services:
   ttd-frontend:
     build:
@@ -11,10 +14,10 @@ services:
     env_file:
       - path: ./app-ui/.env.local
     ports:
-      - "5173:5173"
+      - '5173:5173'
     volumes:
-      - ./app-ui:/app
-      - /app/node_modules
+      - ./app-ui:/app:delagated
+      - app_ui_node_modules:/app/node_modules
     depends_on:
       - ttd-backend
     networks:
@@ -27,7 +30,7 @@ services:
     env_file:
       - path: ./app-backend/.env.local
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./app-backend:/app
     depends_on:
@@ -42,7 +45,7 @@ services:
     env_file:
       - path: ./.env
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     networks:

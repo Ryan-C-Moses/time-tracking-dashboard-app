@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { createTask } from '../../services/task';
+import log from '../../config/logger';
 import ExitFormBtn from '../ExitFormBtn/ExitFormBtn';
 
-const TaskEntryForm = ({ setShowForm, setTaskList }) => {
+const TaskEntryForm = ({
+  setShowForm,
+  setTaskList,
+  fetchTasks,
+  setTimeFrame,
+}) => {
   const [formValues, setFormValues] = useState({
     category: 'work',
     title: '',
     timeframe: 'daily',
     duration: 0,
-    previous: '',
   });
 
   const handleChange = (e) => {
@@ -17,17 +22,22 @@ const TaskEntryForm = ({ setShowForm, setTaskList }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const id = uuidv4();
-    const newTask = { ...formValues, id };
+    const newTask = { ...formValues };
+    await createTask(newTask);
     setShowForm(false);
-    setTaskList((prev) => [...prev, newTask]);
+    log.warn('Re-Fetching All Tasks', '<TaskEntryForm />', {
+      action: 'Submitted form for new task entry',
+    });
+    const data = await fetchTasks();
+    setTaskList(data);
+    setTimeFrame(newTask.timeframe);
   };
 
   const exitForm = () => {
     setShowForm(false);
-  }
+  };
 
   return (
     <div className='rubik-md mt-[30px] mb-[24px] text-(--app-black) relative'>

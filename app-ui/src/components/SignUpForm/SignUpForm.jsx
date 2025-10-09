@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { redirectToHome } from '../../utils/constants';
+import { register } from '../../services/auth';
 import clsx from 'clsx';
 
 const SignUpForm = () => {
@@ -17,9 +18,9 @@ const SignUpForm = () => {
   const handleMouseOut = () => setIsPulse(false);
   const handleChange = (e) =>
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(fields);
+    await register(fields);
     setFields({ fname: '', lname: '', email: '', password: '' });
     redirectToHome(navigate);
   };
@@ -145,7 +146,7 @@ const SignUpForm = () => {
       </form>
       <div className='flex text-xs w-full mb-1'>
         <p className='mr-1'>Already have an account?</p>
-        <Link to="/" className='text-blue-600'>
+        <Link to='/' className='text-blue-600'>
           Sign In
         </Link>
       </div>

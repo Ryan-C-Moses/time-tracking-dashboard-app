@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import log from '../../config/logger';
 
 const TimeFrameBtn = (props) => {
   const { value, isActive, setActive, setTimeFrame } = props;
@@ -6,6 +7,10 @@ const TimeFrameBtn = (props) => {
   const handleClick = () => {
     setActive(value);
     setTimeFrame(value);
+    const msg = `Loading ${value.toUpperCase()} tasks`;
+    log.warn(msg, '<TimeFrameBtn />', {
+      action: `Displaying ${value.toUpperCase()} tasks`,
+    });
   };
 
   return (
@@ -15,7 +20,7 @@ const TimeFrameBtn = (props) => {
       )}
       onClick={handleClick}
     >
-      {value}
+      {value[0].toUpperCase() + value.slice(1)}
     </button>
   );
 };

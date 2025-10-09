@@ -12,6 +12,12 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    proxy: {
+      '/api': {
+        target: 'http://ttd-backend:3000', // 👈 service name, not localhost
+        changeOrigin: true,
+      },
+    },
   },
   test: {
     environment: 'jsdom',

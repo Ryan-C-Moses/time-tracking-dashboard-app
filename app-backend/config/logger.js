@@ -1,8 +1,8 @@
 import { createLogger, format, transports } from "winston";
 import path from "path";
 
-const logger = createLogger({
-  level: "info",
+export const logger = createLogger({
+  level: "http",
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.printf(
@@ -19,4 +19,4 @@ const logger = createLogger({
   ],
 });
 
-export default logger;
+export const logLevels = ['info', 'warn', 'error', 'http'];
